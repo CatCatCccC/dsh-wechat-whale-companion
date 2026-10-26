@@ -13,13 +13,23 @@ DeepSeek Harness（DSH）**微信单人私聊**陪伴插件：对标 [xfgil/dsh-
 ## 安装
 
 ```bash
+# 1. 微信通道
 dsh plugin --profile web add dsh-wechat
-dsh plugin --profile web add /绝对路径/dsh-wechat-whale-companion
-# 或发布后：
-# dsh plugin --profile web add github:你的账号/dsh-wechat-whale-companion
+
+# 2. 本插件（推荐从 GitHub）
+dsh plugin --profile web add github:CatCatCccC/dsh-wechat-whale-companion
+
+# Docker 示例：
+# docker exec -it dsh-harness dsh plugin --profile web add github:CatCatCccC/dsh-wechat-whale-companion
+# docker restart dsh-harness
+
+# 本地开发才用路径：
+# dsh plugin --profile web add /绝对路径/dsh-wechat-whale-companion
 ```
 
-重启 `dsh web`。可选配置 `ownerWxid`；留空且 `lockFirstPeer: true` 时，第一个私聊用户会被锁定为主人。
+网页「设置 → 插件」也可填：`github:CatCatCccC/dsh-wechat-whale-companion`。
+
+重启 `dsh web`（或 `docker restart dsh-harness`）。可选配置 `ownerWxid`；留空且 `lockFirstPeer: true` 时，第一个私聊用户会被锁定为主人。
 
 ## 能力对照（vs QQ companion）
 

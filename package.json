@@ -1,6 +1,6 @@
 {
   "name": "dsh-wechat-whale-companion",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "DSH WeChat DM companion: human-like short chat, whale-girl persona, rhythm/guard/mood — counterpart to dsh-onebot-companion",
   "type": "module",
   "main": "lib/index.js",
@@ -39,7 +39,8 @@
     }
   },
   "dsh": {
-    "bundle": true,
-    "bundle.patch": "cordis.patch.yml"
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
   }
 }

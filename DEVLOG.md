@@ -1,5 +1,10 @@
 # DEVLOG
 
+## 0.1.4
+
+- Fix DSH install reject: `dsh.bundle` must be `{ patch: "./cordis.patch.yml" }` (not flat `bundle: true` + `bundle.patch`).
+- Align `cordis.patch.yml` with official `insert:` shape (same as onebot-companion).
+
 ## 0.1.2
 
 - Windows-safe atomic state overwrite; state key basename lock.
