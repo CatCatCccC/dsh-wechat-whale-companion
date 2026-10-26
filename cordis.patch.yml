@@ -1,0 +1,38 @@
+- id: dsh-wechat-whale-companion
+  name: dsh-wechat-whale-companion
+  config:
+    enabled: true
+    ownerWxid: ""
+    lockFirstPeer: true
+    stateDir: ""
+    modules:
+      guard: { enabled: true }
+      rhythm:
+        enabled: true
+        inboundMergeMs: 2000
+        bubbleDelayMs: "600,1800"
+        speakOnAgentEnd: false
+        deliverToAgent: true
+        autoIngest: true
+      prompt: { enabled: true }
+      persona: { enabled: true, proactiveChance: 0.08, proactiveCooldownMin: 45 }
+      stamp: { enabled: true }
+      adopt: { enabled: true }
+      sleep: { enabled: true }
+      lastword: { enabled: true }
+      diary: { enabled: true }
+      promise: { enabled: true }
+      tier: { enabled: true }
+      temper: { enabled: true }
+      circadian: { enabled: true }
+      solitude: { enabled: true }
+      focus: { enabled: true }
+      media: { enabled: true, voice: false }
+      ownerGate: { enabled: true }
+      toolGuard: { enabled: true, allowDangerous: false }
+      http: { enabled: true, port: 3199 }
+      isolation: { enabled: false }
+      mention: { enabled: false }
+      poke: { enabled: false }
+      hands: { enabled: false }
+      linkcard: { enabled: false }
