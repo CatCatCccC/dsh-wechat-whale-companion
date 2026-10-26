@@ -59,11 +59,10 @@ dsh plugin --profile web add github:CatCatCccC/dsh-wechat-whale-companion
       rhythm:
         inboundMergeMs: 2000
         bubbleDelayMs: "600,1800"
-        # 仅当宿主不会自己把助手正文推到微信时再开，否则会双发
+        # 默认都关：dsh-wechat 已负责入站→agent、出站→微信
         speakOnAgentEnd: false
-        # 宿主已自行把入站送进 agent 时改 false，避免双回合
-        deliverToAgent: true
-        autoIngest: true
+        deliverToAgent: false
+        autoIngest: false
       media:
         voice: false
       toolGuard:

@@ -1,5 +1,16 @@
 # DEVLOG
 
+## 0.1.6
+
+- Remove exported `Config = {}` (breaks DSH config projection; same as onebot-companion).
+- `/physical` bind `0.0.0.0` inside Docker so host port publish works; bare metal stays loopback.
+- Slim `cordis.patch.yml` to `insert` only; exports/repository fields aligned with DSH packages.
+- Default `deliverToAgent`/`autoIngest`/`speakOnAgentEnd` = false — `dsh-wechat` already bridges; avoids double turns.
+
+## 0.1.5
+
+- Fix enable stuck PENDING: remove fake-optional `inject: ['agents?', …]` — Cordis waits forever; use `ctx.get` / `?.` instead.
+
 ## 0.1.4
 
 - Fix DSH install reject: `dsh.bundle` must be `{ patch: "./cordis.patch.yml" }` (not flat `bundle: true` + `bundle.patch`).
