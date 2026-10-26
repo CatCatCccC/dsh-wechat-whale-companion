@@ -1,5 +1,9 @@
 # DEVLOG
 
+## 0.1.7
+
+- Fix `cannot get property "wechat" without inject`: all optional services via `ctx.get` / `softGet` (never `ctx.wechat` etc.).
+
 ## 0.1.6
 
 - Remove exported `Config = {}` (breaks DSH config projection; same as onebot-companion).
