@@ -7,8 +7,12 @@ DeepSeek Harness（DSH）**微信单人私聊**陪伴插件：对标 [xfgil/dsh-
 ## 依赖
 
 - DSH `>=0.2.x <0.3`
-- 先安装并扫码登录 **`dsh-wechat`**
+- 先安装并扫码登录 **`dsh-wechat` >= 0.13**
 - Node `>=22.19`
+
+> 本插件不提供微信通道。`dsh-wechat` 0.13 没有对外 Cordis service，只注册
+> `send_wechat` 工具并把「微信用户 → DSH session」写进 `~/.dsh-wechat/state.json`。
+> 本插件读取这两样东西：没有 `dsh-wechat` 时插件能激活，但不会有人设注入、主动发言或出站。
 
 ## 安装
 
@@ -29,22 +33,29 @@ dsh plugin --profile web add github:CatCatCccC/dsh-wechat-whale-companion
 
 网页「设置 → 插件」也可填：`github:CatCatCccC/dsh-wechat-whale-companion`。
 
-重启 `dsh web`（或 `docker restart dsh-harness`）。可选配置 `ownerWxid`；留空且 `lockFirstPeer: true` 时，第一个私聊用户会被锁定为主人。
+重启 `dsh web`（或 `docker restart dsh-harness`）。默认不填 `ownerWxid`：本插件会跟随 `dsh-wechat` 已绑定的首个微信用户；填了则只认该 wxid。
 
 ## 能力对照（vs QQ companion）
 
 | 模块 | 本插件 | 说明 |
 | --- | --- | --- |
-| guard | 有 | `[[silent]]`、剥旁白、吞报幕 |
-| rhythm | 有 | 入站合并 + 出站分气泡 + 延迟 |
-| prompt | 有 | 每轮规则 + 鲸鱼 SOUL/STYLE |
-| persona | 有 | 心情/精力/亲和 + 主动找主人 |
-| stamp / adopt / sleep / lastword | 有 | 时间间隔、会话 resume、睡意、最后一句话 |
-| diary / promise / tier / temper / circadian / solitude / focus | 有 | `wx_*` 工具与状态落盘 |
+| guard | 有 | `[[silent]]`、剥旁白、吞报幕；只作用于本插件 `speak()`，不拦 `dsh-wechat` 自己的自动回复 |
+| rhythm | 有 | 仅本插件 `speak()` 的分气泡/延迟；`dsh-wechat` 自己已有打字合并与发送队列 |
+| prompt | 有 | 每轮规则 + 鲸鱼 SOUL/STYLE；通过 `systemPrompt.context` 注入，默认只给 `dsh-wechat` 绑定的会话 |
+| persona | 有 | 心情/精力/亲和 + 主动找主人；从 `session/event` 观察绑定会话的收发 |
+| stamp / adopt | 仅自定义宿主 | 属于插件自己的 `ingest()` 路径；`dsh-wechat` 自己管会话绑定与消息，不需要也不使用 |
+| sleep / lastword | 有 | 从绑定会话的 `session/event` 观察 assistant 消息：睡意、最后一句话 |
+| diary / promise | 有 | `wx_diary`、`wx_promise` 工具；promise 到点提醒 |
+| tier / circadian | 有 | 从好感/消息时间派生；tier 用于主动发言文案与 `/physical`，circadian 用于主动发言时段门控；无独立工具 |
+| temper / solitude / focus | 部分 | 只有状态结构，没有工具/写入入口；当前不会产生数据，**不要当作已实现** |
 | media | 有 | 发图 / 表情目录；语音可选降级 |
-| ownerGate + toolGuard | 有 | 单人白名单；默认禁危险工具 |
+| ownerGate | 有 | 默认跟随 `dsh-wechat` 已绑定用户；`ownerWxid` 可覆盖 |
+| toolGuard | 可选 | **默认关**。`tools.guard()` 是 profile 全局的，开启后会拦所有 agent 的危险工具 |
 | http `/physical` | 有 | 仅 `127.0.0.1:3199` |
 | isolation / mention / poke / hands / linkcard | 无对等 | 微信无私聊群语义，默认关 |
+
+> `dsh-wechat` 已负责入站→agent、出站→微信、打字合并、静默/结论模式、限流与白名单；
+> 本插件默认不重复接管这些路径，只补人设、情绪、`wx_*` 工具和插件自己发起的消息。
 
 ## 配置（节选）
 
@@ -53,9 +64,11 @@ dsh plugin --profile web add github:CatCatCccC/dsh-wechat-whale-companion
 ```yaml
 - id: dsh-wechat-whale-companion
   config:
-    ownerWxid: ""           # 主人 wxid；空则锁定首个私聊对象
-    lockFirstPeer: true
+    ownerWxid: ""             # 空 = 跟随 dsh-wechat 已绑定用户
+    wechatStorageDir: ""      # 空 = ~/.dsh-wechat（读 state.json 的 session 绑定）
     modules:
+      prompt:
+        scope: wechat         # wechat = 只注入 dsh-wechat 绑定会话；all = 全 profile
       rhythm:
         inboundMergeMs: 2000
         bubbleDelayMs: "600,1800"
@@ -66,6 +79,7 @@ dsh plugin --profile web add github:CatCatCccC/dsh-wechat-whale-companion
       media:
         voice: false
       toolGuard:
+        enabled: false        # 开启会拦整个 profile 的危险工具，慎用
         allowDangerous: false
 ```
 
@@ -73,7 +87,7 @@ dsh plugin --profile web add github:CatCatCccC/dsh-wechat-whale-companion
 
 ## 运行时 API
 
-插件加载后挂在 `ctx.whaleCompanion`：
+插件加载后以 Cordis 服务形式提供：`ctx.get('whaleCompanion')`；其他插件也可声明 `inject: ['whaleCompanion']` 后直接读取。
 
 - `ingest({ peer, text, at })` — 主人校验 + stamp + 入站合并
 - `speak(text)` — guard 清洗后分气泡发送
@@ -86,8 +100,12 @@ dsh plugin --profile web add github:CatCatCccC/dsh-wechat-whale-companion
 
 ## 边界
 
+- **依赖 `dsh-wechat` 的持久绑定**：插件通过 `~/.dsh-wechat/state.json` 的 `users[*].sessionId` 判断哪些会话来自微信。绑定文件不存在时，人设注入返回空、主动发言不启动；这是为了不污染同一 profile 里的 GUI / 编程会话。若 `dsh-wechat` 改过 `storageDir`，用 `wechatStorageDir` 指过去。
+- **出站走 `send_wechat` 工具**：`dsh-wechat` 0.13 不提供 service。插件调用它注册的工具，因此受它的 10 条/窗口限流与 `/next` 队列约束；不再有旧的 `wechat` service 路径。
+- **guard 不接管 `dsh-wechat` 的自动回复**：`dsh-wechat` 直接从 `session/event` 推送 assistant 文本，不经过本插件的 `wechat/outbound` 钩子。`[[silent]]`/旁白清洗只对 `ctx.whaleCompanion.speak()` 生效；日常自动回复请用 `dsh-wechat` 自带的 `/silent`、`/final`。
+- **`toolGuard` 是全局的**：`tools.guard()` 挂在插件上下文上会拦 profile 内所有 agent。默认关闭；只想给陪伴会话禁工具时，不要用这个开关。
+- **`ownerGate` 只保护插件自己的 `ingest()`**：真正的微信入站白名单是 `dsh-wechat` 的 `allowedUsers`；本插件默认跟随它已绑定的首个用户。
 - ClawBot **无微信群**；主动推送受 iLink `context_token` 限制，失败时需主人先发一条续期。
-- `dsh-wechat` 内部 API 不稳定：探测失败则降级，不崩宿主。
 - 用**小号**；面板与本插件 HTTP 面勿暴露公网。
 
 ## 测试

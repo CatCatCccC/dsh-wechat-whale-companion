@@ -1,5 +1,18 @@
 # DEVLOG
 
+## 0.1.8
+
+- Fix `cannot set property "whaleCompanion" without provide`: Cordis 4 only allows declared services on `ctx`. Register the runtime API with `ctx.provide('whaleCompanion', api)` instead of assigning `ctx.whaleCompanion`, and drop the manual delete on dispose (the provide effect owns cleanup).
+- Register a teardown effect before any module runs, so a throwing module cannot leak the HTTP listener or timers.
+- **Tools**: `wx_diary` / `wx_promise` / `wx_send_image` / `wx_sticker` / `wx_say` now use DSH's `tools.register({ name, description, parameters, output, execute })` shape. The old three-argument call silently failed on DSH 0.2.x because `output` was missing, so none of the tools were visible.
+- **Prompt**: replace the ineffective `agent/pre-step` message rewrite with `systemPrompt.context()`. The pre-step listener only mutated its local payload; `next()` built the request from its own claimed messages. The context is gated by the session bindings in `~/.dsh-wechat/state.json` (`prompt.scope: wechat`, default), so it no longer leaks the whale persona into GUI/coding sessions. `scope: all` is opt-in.
+- **Channel**: dsh-wechat 0.13 exposes no `wechat` service; add an outbound adapter over its `send_wechat` tool. `speak()`, proactive pings and promise reminders now work again, and re-probe lazily if dsh-wechat registers after us.
+- **Inbound state**: observe `session/event` only for dsh-wechat-bound sessions; feed `persona.onOwnerMessage` / `onReply`, `sleep.observeOutbound`, `lastword.record` and `circadian.touch`. This makes proactive cooldowns and mood state real under dsh-wechat instead of only working through the unused `ingest()` path.
+- **Owner gate**: prefer dsh-wechat's persisted first user instead of racing to lock a different first peer. `ownerWxid` still overrides.
+- **toolGuard**: default off. `tools.guard()` is profile-global, so the old default denied dangerous tools for every agent, not just the WeChat session.
+- Fix `wx_promise complete` returning `undefined`, non-numeric `dueAt` comparison, UTC day keys in `temper`, and non-finite `circadian.touch` timestamps.
+- README now marks `temper` / `solitude` / `focus` as state placeholders: they have storage shapes but no tool or caller, so they produce no data today.
+
 ## 0.1.7
 
 - Fix `cannot get property "wechat" without inject`: all optional services via `ctx.get` / `softGet` (never `ctx.wechat` etc.).
