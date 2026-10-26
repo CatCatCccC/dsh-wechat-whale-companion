@@ -32,12 +32,17 @@ describe('host integration', () => {
     assert.equal(typeof off, 'function')
   })
 
-  it('injects the persona through systemPrompt.context, not agent/pre-step', () => {
+  it('injects the persona through systemPrompt.section for wechat-bound sessions', () => {
+    const sections = []
     const contexts = []
     const ctx = {
       get(name) {
         if (name !== 'systemPrompt') return undefined
         return {
+          section(entry) {
+            sections.push(entry)
+            return () => {}
+          },
           context(entry) {
             contexts.push(entry)
             return () => {}
@@ -48,18 +53,23 @@ describe('host integration', () => {
     const runtime = {
       config: { modules: { prompt: { enabled: true, scope: 'wechat' } } },
       log: { info() {}, warn() {} },
+      stats: {},
       persona: { snapshot: () => ({ mood: 60 }), styleHint: () => '偏短句' },
-      wechatSessions: { has: (id) => id === 'session-wechat' },
+      wechatSessions: {
+        has: (id) => id === 'session-wechat',
+        matches: (context) => context?.agent?.id === 'session-wechat',
+      },
     }
 
     const dispose = applyPrompt(ctx, runtime)
 
-    assert.equal(contexts.length, 1)
-    assert.equal(contexts[0].name, 'whale-companion')
-    assert.equal(typeof contexts[0].text, 'function')
-    assert.match(contexts[0].text({ agent: { id: 'session-wechat' } }), /微信鲸鱼娘陪伴规则/)
-    assert.match(contexts[0].text({ agent: { id: 'session-wechat' } }), /偏短句/)
-    assert.equal(contexts[0].text({ agent: { id: 'session-gui' } }), '')
+    assert.equal(sections.length, 1)
+    assert.equal(sections[0].name, 'whale-companion-persona')
+    assert.equal(typeof sections[0].text, 'function')
+    assert.match(sections[0].text({ agent: { id: 'session-wechat' } }), /微信鲸鱼娘陪伴规则/)
+    assert.match(sections[0].text({ agent: { id: 'session-wechat' } }), /偏短句/)
+    assert.equal(sections[0].text({ agent: { id: 'session-gui' } }), '')
+    assert.ok(contexts.some((c) => c.name === 'whale-companion-mood'))
     dispose()
   })
 

@@ -47,4 +47,17 @@ describe('dsh-wechat session index', () => {
     assert.equal(index.has('session-anything'), false)
     assert.equal(index.ownerUserId(), '')
   })
+
+  it('matches assemble context by id or cwd', () => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'whale-wx-'))
+    const cwd = path.join(dir, 'work')
+    fs.mkdirSync(cwd)
+    writeState(dir, {
+      wx_owner: { userId: 'wx_owner', sessionId: 'session-wechat', cwd },
+    })
+    const index = new WechatSessionIndex(dir)
+    assert.equal(index.matches({ agent: { id: 'session-wechat' } }), true)
+    assert.equal(index.matches({ agent: { id: 'session-gui' } }), false)
+    assert.equal(index.matches({ agent: { id: 'other', options: { cwd } } }), true)
+  })
 })

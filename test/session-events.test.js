@@ -55,21 +55,39 @@ describe('dsh-wechat session observation', () => {
     const before = runtime.persona.snapshot()
     listener({ id: 'session-wechat' }, {
       type: 'user/message',
-      message: { content: [{ type: 'text', text: '在吗' }] },
+      time: Date.now(),
+      data: {
+        source: { kind: 'user' },
+        message: { content: [{ type: 'text', text: '在吗' }] },
+      },
     })
     const after = runtime.persona.snapshot()
     assert.ok(after.lastOwnerAt > (before.lastOwnerAt || 0))
 
+    // Runtime context / skill reminders are also user/message events but
+    // carry a non-human source; they must not count as the owner speaking.
+    listener({ id: 'session-wechat' }, {
+      type: 'user/message',
+      data: {
+        source: { kind: 'time-context' },
+        message: { content: [{ type: 'text', text: 'time snapshot' }] },
+      },
+    })
+    assert.equal(runtime.persona.snapshot().lastOwnerAt, after.lastOwnerAt)
+
     const guiBefore = runtime.persona.snapshot().lastOwnerAt
     listener({ id: 'session-gui' }, {
       type: 'user/message',
-      message: { content: [{ type: 'text', text: '写代码' }] },
+      data: {
+        source: { kind: 'user' },
+        message: { content: [{ type: 'text', text: '写代码' }] },
+      },
     })
     assert.equal(runtime.persona.snapshot().lastOwnerAt, guiBefore)
 
     listener({ id: 'session-wechat' }, {
       type: 'assistant/message',
-      message: { content: [{ type: 'text', text: '晚安' }] },
+      data: { message: { content: [{ type: 'text', text: '晚安' }] } },
     })
     assert.equal(runtime.lastword.get().text, '晚安')
     assert.equal(runtime.persona.snapshot().asleep, true)

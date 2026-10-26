@@ -41,7 +41,7 @@ dsh plugin --profile web add github:CatCatCccC/dsh-wechat-whale-companion
 | --- | --- | --- |
 | guard | 有 | `[[silent]]`、剥旁白、吞报幕；只作用于本插件 `speak()`，不拦 `dsh-wechat` 自己的自动回复 |
 | rhythm | 有 | 仅本插件 `speak()` 的分气泡/延迟；`dsh-wechat` 自己已有打字合并与发送队列 |
-| prompt | 有 | 每轮规则 + 鲸鱼 SOUL/STYLE；通过 `systemPrompt.context` 注入，默认只给 `dsh-wechat` 绑定的会话 |
+| prompt | 有 | 每轮规则 + 鲸鱼 SOUL/STYLE；通过 `systemPrompt.section` 注入，默认只给 `dsh-wechat` 绑定的会话 |
 | persona | 有 | 心情/精力/亲和 + 主动找主人；从 `session/event` 观察绑定会话的收发 |
 | stamp / adopt | 仅自定义宿主 | 属于插件自己的 `ingest()` 路径；`dsh-wechat` 自己管会话绑定与消息，不需要也不使用 |
 | sleep / lastword | 有 | 从绑定会话的 `session/event` 观察 assistant 消息：睡意、最后一句话 |

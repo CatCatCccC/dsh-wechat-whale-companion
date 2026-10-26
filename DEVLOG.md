@@ -1,5 +1,16 @@
 # DEVLOG
 
+## 0.1.10
+
+- Persona not sounding like 鲸鱼娘: inject via `systemPrompt.section` (system instructions), not only weak `context()` user-snapshots.
+- Broader wechat session match (agent.id / session.id / cwd); `/physical` now shows `wechatSessions` + prompt hit/skip counters for diagnosis.
+- Strengthen SOUL.md identity lines (anti assistant-voice).
+
+## 0.1.9
+
+- Fix the `session/event` observer: DSH puts the message payload under `event.data` (`data.message.content`), while 0.1.8 read only flat `event.message`/`event.content`. As a result the bound WeChat session was recognized, but `persona.lastOwnerAt`, `stats.wechatUserMessages` and `lastword` stayed empty.
+- Ignore non-human `user/message` events (`source.kind !== "user"`): runtime context, skill reminders and time-context are also appended as user messages and must not count as the owner speaking.
+
 ## 0.1.8
 
 - Fix `cannot set property "whaleCompanion" without provide`: Cordis 4 only allows declared services on `ctx`. Register the runtime API with `ctx.provide('whaleCompanion', api)` instead of assigning `ctx.whaleCompanion`, and drop the manual delete on dispose (the provide effect owns cleanup).
