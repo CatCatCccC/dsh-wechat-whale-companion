@@ -29,7 +29,7 @@ function makeHost(tools) {
 }
 
 describe('media staging for send_wechat', () => {
-  it('copies sticker into session cwd before sendImage', async () => {
+  it('copies sticker into session cwd and passes agentId', async () => {
     const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), 'whale-media-'))
     const wechatDir = fs.mkdtempSync(path.join(os.tmpdir(), 'whale-wx-'))
     const sessionCwd = fs.mkdtempSync(path.join(os.tmpdir(), 'whale-cwd-'))
@@ -52,8 +52,8 @@ describe('media staging for send_wechat', () => {
       get(name) {
         if (name !== 'send_wechat') return undefined
         return {
-          async execute(args) {
-            sent.push(args)
+          async execute(args, exec) {
+            sent.push({ args, exec })
             return { ok: true }
           },
         }
@@ -74,7 +74,6 @@ describe('media staging for send_wechat', () => {
     })
 
     const src = path.join(stateDir, 'src-sticker.png')
-    // minimal PNG header + padding so sniff isn't required here
     fs.writeFileSync(
       src,
       Buffer.from([
@@ -82,15 +81,16 @@ describe('media staging for send_wechat', () => {
       ]),
     )
 
-    // Bypass resolveOrSearch: call sendImage directly with a path under stateDir (allowed)
     const runtime = ctx.whaleCompanion.runtime
-    // allow stateDir root via store.root — src is under stateDir
     const r = await runtime.media.sendImage(src)
     assert.equal(r.ok, true)
+    assert.equal(r.agentId, 'session-wechat')
     assert.ok(String(r.path).includes('.whale-stickers'))
+    assert.ok(String(r.path).startsWith(sessionCwd))
     assert.ok(fs.existsSync(r.path))
     assert.equal(sent.length, 1)
-    assert.ok(String(sent[0].file_path).includes('.whale-stickers'))
+    assert.ok(String(sent[0].args.file_path).includes('.whale-stickers'))
+    assert.equal(sent[0].exec?.agent?.id, 'session-wechat')
     handle.dispose()
   })
 })

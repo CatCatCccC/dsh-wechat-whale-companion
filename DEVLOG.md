@@ -1,5 +1,9 @@
 # DEVLOG
 
+## 0.2.10
+
+- Stickers: pass WeChat-bound `agentId` into `send_wechat`. Without it dsh-wechat only allows registered workspaces (drops session cwd), so staged `.whale-stickers` copies were still refused after 0.2.9.
+
 ## 0.2.9
 
 - Stickers: stage files into `<sessionCwd>/.whale-stickers/` before `send_wechat` so dsh-wechat's workspace path guard no longer refuses plugin/cache paths (the “图库罢工” symptom).

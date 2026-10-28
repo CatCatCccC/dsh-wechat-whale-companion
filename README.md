@@ -92,7 +92,7 @@ dsh plugin --profile web add github:CatCatCccC/dsh-wechat-whale-companion
 
 `searchStyle: cute`（默认）会把「傲娇」变成「傲娇可爱/软萌/治愈」再搜，同一池里更偏好看一点；要斗图表情改 `raw`。
 
-发送前会把图片拷到微信会话工作区下的 `.whale-stickers/`（因 dsh-wechat 默认拒绝工作区外路径）。仍失败时可在 dsh-wechat 设置打开 `allowAnyFilePath`。
+发送前会把图片拷到微信会话工作区下的 `.whale-stickers/`，并带上绑定会话的 `agentId`（dsh-wechat 按「调用方会话」校验路径；不传会丢掉会话 cwd）。仍失败时可在 dsh-wechat 设置打开 `allowAnyFilePath`。
 
 > 均为第三方免费接口，可能限频或失效；失败时用颜文字。注意版权，建议自用。
 
