@@ -1,5 +1,17 @@
 # DEVLOG
 
+## 0.2.7
+
+- Stickers: re-bundle sample assets; harden prompt so「发个表情」must call `wx_sticker` (no verbal refusal); show inventory + turn nudge in persona block.
+
+## 0.2.6
+
+- Proactive / circadian hours use `persona.timeZone` (default `Asia/Shanghai`) so UTC Docker containers no longer treat China daytime as quiet hours.
+
+## 0.2.5
+
+- Fix double WeChat bubbles: if `deliverAssistant` is on but dsh-wechat `silent` is off, skip plugin delivery (observe only). Claim speak fingerprint before async send to drop concurrent duplicate events.
+
 ## 0.2.4
 
 - Proactive rewrite: intent pools (meal/miss/night/…), silence-weighted chance, recent-line dedupe, optional sticker on ping. Config: `proactiveMinOwnerGapMin`, `proactiveStickerChance`. `/physical` shows last intent / skip reason.

@@ -3,6 +3,7 @@ import assert from 'node:assert/strict'
 import {
   dayPart,
   effectiveChance,
+  hourInTimeZone,
   inQuietHours,
   pickIntent,
   pickLine,
@@ -17,10 +18,13 @@ describe('proactive', () => {
     assert.equal(dayPart(12), 'noon')
     assert.equal(dayPart(18), 'evening')
     assert.equal(dayPart(23), 'night')
-    const quiet = new Date('2026-10-28T03:00:00')
-    assert.equal(inQuietHours(quiet), true)
-    const day = new Date('2026-10-28T15:00:00')
-    assert.equal(inQuietHours(day), false)
+    // 03:00 UTC = 11:00 Asia/Shanghai → not quiet
+    const utcDawn = Date.parse('2026-10-28T03:00:00Z')
+    assert.equal(inQuietHours(utcDawn, 'Asia/Shanghai'), false)
+    assert.equal(hourInTimeZone(utcDawn, 'Asia/Shanghai'), 11)
+    // 18:00 UTC = 02:00 Asia/Shanghai → quiet
+    const utcEvening = Date.parse('2026-10-28T18:00:00Z')
+    assert.equal(inQuietHours(utcEvening, 'Asia/Shanghai'), true)
   })
 
   it('boosts chance when owner silent longer', () => {
@@ -67,7 +71,8 @@ describe('proactive', () => {
   })
 
   it('plans a fire with injected random', () => {
-    const noon = new Date('2026-10-28T12:30:00').getTime()
+    // 04:30 UTC = 12:30 Shanghai → meal
+    const noon = Date.parse('2026-10-28T04:30:00Z')
     const plan = planProactiveTick({
       now: noon,
       asleep: false,
@@ -82,6 +87,7 @@ describe('proactive', () => {
       stickerChance: 1,
       hasSendText: true,
       hasOwner: true,
+      timeZone: 'Asia/Shanghai',
       random: () => 0,
     })
     assert.equal(plan.fire, true)
@@ -91,7 +97,8 @@ describe('proactive', () => {
   })
 
   it('skips quiet hours and cooldown', () => {
-    const night = new Date('2026-10-28T03:00:00').getTime()
+    // 18:30 UTC → 02:30 Shanghai → quiet
+    const night = Date.parse('2026-10-28T18:30:00Z')
     assert.equal(
       planProactiveTick({
         now: night,
@@ -102,12 +109,14 @@ describe('proactive', () => {
         hasSendText: true,
         hasOwner: true,
         chance: 1,
+        timeZone: 'Asia/Shanghai',
         random: () => 0,
       }).reason,
       'quiet_hours',
     )
 
-    const day = new Date('2026-10-28T15:00:00').getTime()
+    // 07:00 UTC → 15:00 Shanghai → not quiet; cooldown wins
+    const day = Date.parse('2026-10-28T07:00:00Z')
     assert.equal(
       planProactiveTick({
         now: day,
@@ -119,6 +128,7 @@ describe('proactive', () => {
         hasSendText: true,
         hasOwner: true,
         chance: 1,
+        timeZone: 'Asia/Shanghai',
         random: () => 0,
       }).reason,
       'cooldown',

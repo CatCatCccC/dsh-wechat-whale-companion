@@ -98,6 +98,57 @@ describe('dsh-wechat session observation', () => {
     handle.dispose()
   })
 
+  it('skips deliver when silent is off to avoid double-send', async () => {
+    const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), 'whale-nosilent-'))
+    const wechatDir = fs.mkdtempSync(path.join(os.tmpdir(), 'whale-wechat-'))
+    fs.writeFileSync(
+      path.join(wechatDir, 'state.json'),
+      JSON.stringify({
+        users: { wx_owner: { userId: 'wx_owner', sessionId: 'session-wechat' } },
+      }),
+      'utf8',
+    )
+    fs.writeFileSync(
+      path.join(wechatDir, 'config.json'),
+      JSON.stringify({ silent: false }),
+      'utf8',
+    )
+
+    const sent = []
+    const tools = {
+      get(name) {
+        if (name !== 'send_wechat') return undefined
+        return {
+          async execute(args) {
+            sent.push(args.text)
+            return { ok: true }
+          },
+        }
+      },
+    }
+
+    const { ctx, listeners } = makeHost(tools)
+    const handle = apply(ctx, {
+      stateDir,
+      wechatStorageDir: wechatDir,
+      modules: {
+        http: { enabled: false },
+        outbound: { deliverAssistant: true, ensureWechatSilent: false },
+      },
+    })
+
+    const listener = listeners.get('session/event')?.[0]
+    listener({ id: 'session-wechat' }, {
+      type: 'assistant/message',
+      data: { message: { content: [{ type: 'text', text: '小鲸鱼啊，还能是谁。' }] } },
+    })
+    await new Promise((r) => setTimeout(r, 50))
+    assert.deepEqual(sent, [])
+    assert.ok((ctx.whaleCompanion.runtime.stats.doubleSendAvoided || 0) >= 1)
+    assert.equal(ctx.whaleCompanion.runtime.lastword.get().text, '小鲸鱼啊，还能是谁。')
+    handle.dispose()
+  })
+
   it('deliverAssistant sends paced bubbles and skips double observe', async () => {
     const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), 'whale-deliver-'))
     const wechatDir = fs.mkdtempSync(path.join(os.tmpdir(), 'whale-wechat-'))

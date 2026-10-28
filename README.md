@@ -69,6 +69,7 @@ dsh plugin --profile web add github:CatCatCccC/dsh-wechat-whale-companion
         scope: wechat
         personaDir: ""          # 空 = 包内 assets/persona
       persona:
+        timeZone: Asia/Shanghai        # 安静时段/干饭意图按此时区（防 Docker UTC 误判）
         proactiveChance: 0.18          # 基础概率；主人沉默越久越高
         proactiveCooldownMin: 22
         proactiveMinOwnerGapMin: 12    # 主人刚聊过不主动
