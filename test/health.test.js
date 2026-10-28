@@ -31,9 +31,25 @@ describe('physical health', () => {
       wechat: { present: true, notes: 'ok' },
       wechatSessions: { list: () => [{ sessionId: 's1' }] },
       media: { listStickers: () => ['a.png'] },
-      stats: { promptInjected: 2 },
+      stats: { promptInjected: 2, toolsRegistered: { wx_sticker: true } },
     })
     assert.equal(h.level, 'ok')
     assert.ok(h.checks.every((c) => c.ok))
+  })
+
+  it('warns when wx_sticker never registered', () => {
+    const h = buildHealth({
+      config: {
+        modules: { outbound: { deliverAssistant: false } },
+        wechatStorageDir: '',
+      },
+      prompt: { registered: true, source: 'section' },
+      wechat: { present: true, notes: 'ok' },
+      wechatSessions: { list: () => [{ sessionId: 's1' }] },
+      media: { listStickers: () => ['a.png'] },
+      stats: { promptInjected: 1 },
+    })
+    assert.ok(h.checks.some((c) => c.id === 'tools.wx_sticker' && !c.ok))
+    assert.ok(h.advice.some((a) => /wx_sticker 未注册/.test(a)))
   })
 })

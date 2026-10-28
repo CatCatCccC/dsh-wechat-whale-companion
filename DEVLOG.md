@@ -1,5 +1,9 @@
 # DEVLOG
 
+## 0.2.11
+
+- Tools: wait for DSH `tools` service (`inject` + poll) before registering `wx_*`. One-shot `get('tools')` during `apply()` often no-ops → model claims「发图工具没挂着」. `/physical` now checks `tools.wx_sticker`.
+
 ## 0.2.10
 
 - Stickers: pass WeChat-bound `agentId` into `send_wechat`. Without it dsh-wechat only allows registered workspaces (drops session cwd), so staged `.whale-stickers` copies were still refused after 0.2.9.
