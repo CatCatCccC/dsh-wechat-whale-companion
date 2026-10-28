@@ -1,5 +1,11 @@
 # DEVLOG
 
+## 0.1.13
+
+- Drop unused `patch.js`, `httpSendText`, legacy `wechat/outbound` hook, `wx_say`/voice (no TTS), `owner.allow`/`lockFirstPeer` (ingest gone), `persona.bump`, stamp leftover prompt rule.
+- Prefer `send_wechat` tool probe first; keep a thin legacy service fallback.
+- Single outbound queue via `rhythm.sendPaced` (remove duplicate speakChain).
+
 ## 0.1.12
 
 - WeChat-only slim: drop QQ stubs (`isolation` / `mention` / `poke` / `hands` / `linkcard`), unused `stamp` / `adopt`, and placeholder `temper` / `solitude` / `focus` (no writers).

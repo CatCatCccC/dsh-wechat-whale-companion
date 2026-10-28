@@ -43,7 +43,7 @@ dsh plugin --profile web add github:CatCatCccC/dsh-wechat-whale-companion
 | sleep / lastword | 从绑定会话的 `session/event` 观察 |
 | diary / promise | `wx_diary`、`wx_promise`；promise 到点提醒 |
 | tier / circadian | 亲密度文案与主动发言时段门控 |
-| media | 发图 / 表情目录；语音可选 |
+| media | 发图 / `assets/stickers` 表情 |
 | http `/physical` | 观测面，默认 `127.0.0.1:3199` |
 
 日常自动回复由 **`dsh-wechat`** 推送，不经过本插件的 `speak()`。静默/结论请用它自带的 `/silent`、`/final`。
@@ -62,11 +62,11 @@ dsh plugin --profile web add github:CatCatCccC/dsh-wechat-whale-companion
         scope: wechat         # wechat = 只注入绑定会话；all = 全 profile
       rhythm:
         bubbleDelayMs: "600,1800"
-      media:
-        voice: false
       toolGuard:
         enabled: false        # 开启会拦整个 profile 的危险工具，慎用
 ```
+
+表情图放到 `assets/stickers/`（png/jpg/gif/webp），用工具 `wx_sticker`。
 
 状态目录默认：`~/.dsh/plugins/dsh-wechat-whale-companion/`。
 

@@ -6,15 +6,15 @@ describe('config', () => {
   it('merges module overrides', () => {
     const c = normalizeConfig({
       ownerWxid: 'wx_a',
-      modules: { rhythm: { bubbleDelayMs: '100,300' }, media: { voice: true } },
+      modules: { rhythm: { bubbleDelayMs: '100,300' }, media: { enabled: false } },
     })
     assert.equal(c.ownerWxid, 'wx_a')
     assert.equal(c.modules.rhythm.bubbleDelayMs, '100,300')
     assert.equal(c.modules.rhythm.enabled, true)
-    assert.equal(c.modules.media.voice, true)
+    assert.equal(c.modules.media.enabled, false)
     assert.equal(c.modules.prompt.scope, 'wechat')
+    assert.equal(c.lockFirstPeer, undefined)
     assert.equal(c.modules.stamp, undefined)
-    assert.equal(c.modules.mention, undefined)
   })
 
   it('parses delay range', () => {
