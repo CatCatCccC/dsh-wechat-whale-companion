@@ -54,7 +54,11 @@ describe('host integration', () => {
       config: { modules: { prompt: { enabled: true, scope: 'wechat' } } },
       log: { info() {}, warn() {} },
       stats: {},
-      persona: { snapshot: () => ({ mood: 60 }), styleHint: () => '偏短句' },
+      persona: {
+        snapshot: () => ({ mood: 60 }),
+        styleHint: () => '偏短句',
+        moodLine: () => '【此刻】心情还行 精力一般 关系熟人 睡眠=醒',
+      },
       wechatSessions: {
         has: (id) => id === 'session-wechat',
         matches: (context) => context?.agent?.id === 'session-wechat',
@@ -68,10 +72,13 @@ describe('host integration', () => {
     assert.equal(typeof sections[0].text, 'function')
     assert.match(sections[0].text({ agent: { id: 'session-wechat' } }), /微信鲸鱼娘陪伴规则/)
     assert.match(sections[0].text({ agent: { id: 'session-wechat' } }), /偏短句/)
+    assert.match(sections[0].text({ agent: { id: 'session-wechat' } }), /心情还行/)
     assert.equal(sections[0].text({ agent: { id: 'session-gui' } }), '')
-    assert.ok(contexts.some((c) => c.name === 'whale-companion-mood'))
+    // Mood is inlined in section — no duplicate whale-companion-mood context
+    assert.equal(contexts.length, 0)
     dispose()
   })
+
 
   it('waits for a late systemPrompt service instead of dropping the persona', () => {
     const sections = []
@@ -91,7 +98,11 @@ describe('host integration', () => {
       config: { modules: { prompt: { enabled: true, scope: 'wechat' } } },
       log: { info() {}, warn() {} },
       stats: {},
-      persona: { snapshot: () => ({ mood: 60 }), styleHint: () => '' },
+      persona: {
+        snapshot: () => ({ mood: 60 }),
+        styleHint: () => '',
+        moodLine: () => '【此刻】心情还行',
+      },
       wechatSessions: { matches: () => true },
     }
 

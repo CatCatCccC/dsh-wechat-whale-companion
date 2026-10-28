@@ -1,5 +1,24 @@
-# Bundle layer — keep insert minimal (defaults live in normalizeConfig).
+# Bundle layer — companion plugin + lightweight WeChat whale preset.
 # Do not export a Config schema from lib/index.js (breaks DSH loader).
 - insert:
     - id: dsh-wechat-whale-companion
       name: dsh-wechat-whale-companion
+
+    # Slim chat preset — switch with: /preset switch 微信鲸鱼娘
+    # Does NOT ship whale-loli memory files; companion handles WeChat persona injection.
+    - id: preset-微信鲸鱼娘
+      name: '@deepseek-ai/dsh-agent-preset'
+      config:
+        id: 微信鲸鱼娘
+        name: 微信鲸鱼娘
+        description: 微信单人私聊短句陪伴（非编程助手）。配合 dsh-wechat-whale-companion 使用；装完请 /preset switch 微信鲸鱼娘 再 /session new。
+        order: 8
+        plugins:
+          - id: persona
+            name: '@deepseek-ai/dsh-persona'
+            config:
+              prefix: |-
+                你在微信里和主人单聊。你是小鲸鱼/鲸鱼娘：傲娇嘴硬心软，短句口语，不是客服、不是编程助手。
+                禁止「有什么可以帮您」「作为一个 AI」；别写报告、别列 Markdown 清单。
+                多句用 ---wx-next--- 分行；不想回只输出 [[silent]]。
+                内部思考用简体中文；回答语言跟主人。

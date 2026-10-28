@@ -1,5 +1,31 @@
 # DEVLOG
 
+## 0.2.4
+
+- Proactive rewrite: intent pools (meal/miss/night/…), silence-weighted chance, recent-line dedupe, optional sticker on ping. Config: `proactiveMinOwnerGapMin`, `proactiveStickerChance`. `/physical` shows last intent / skip reason.
+
+## 0.2.3
+
+- `media.searchStyle: cute` (default): bias sticker search keywords with 可爱/软萌/治愈 so results skew prettier; set `raw` for exact meme keywords.
+
+## 0.2.2
+
+- Replace Baidu generic image search with dedicated 表情包 providers: Sogou via ruseo (no key) → APIHZ Sogou → APIHZ library. Better meme results for chat stickers.
+
+## 0.2.1
+
+- Auto sticker search: `wx_sticker` resolves local/cache first, else web search + cache. Cooldown + NSFW query block + cache prune.
+- Prompt/tools text updated; `/physical` shows search fail hints.
+
+## 0.2.0
+
+- Outbound takeover: ensure dsh-wechat `silent`, deliver bound `assistant/message` via `speak()` so `[[silent]]` / `---wx-next---` work for daily chat; fingerprint dedupe avoids double mood/lastword.
+- Register slim agent preset「微信鲸鱼娘」in `cordis.patch.yml`.
+- Stronger proactive (0.15 / 25m, time-of-day pools, lastword avoid, `proactiveFailReason`).
+- Stickers in `assets/stickers/` + tool/prompt triggers; mood as Chinese words; `personaDir` config.
+- `/physical` gains `health` + optional `http.token`; sleep/lastword folded into persona; fatFishHits + quiet affinity hint.
+- Drop duplicate mood `systemPrompt.context`.
+
 ## 0.1.13
 
 - Drop unused `patch.js`, `httpSendText`, legacy `wechat/outbound` hook, `wx_say`/voice (no TTS), `owner.allow`/`lockFirstPeer` (ingest gone), `persona.bump`, stamp leftover prompt rule.

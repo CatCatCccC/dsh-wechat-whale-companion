@@ -1,7 +1,7 @@
 {
   "name": "dsh-wechat-whale-companion",
-  "version": "0.1.13",
-  "description": "DSH WeChat DM companion: whale-girl persona, mood, paced speak, wx_* tools on top of dsh-wechat",
+  "version": "0.2.4",
+  "description": "DSH WeChat DM companion: persona, intent proactive pings, cute-biased Sogou meme search",
   "type": "module",
   "main": "lib/index.js",
   "exports": {

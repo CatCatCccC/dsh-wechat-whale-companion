@@ -1,95 +1,110 @@
 # dsh-wechat-whale-companion
 
-DeepSeek Harness（DSH）**微信单人私聊**陪伴插件：挂在 [`dsh-wechat`](https://github.com/pan17/dsh-wechat) 之上，注入鲸鱼娘短句人设，并提供情绪 / 主动找主人 / `wx_*` 工具。
+DeepSeek Harness（DSH）**微信单人私聊**陪伴插件：挂在 [`dsh-wechat`](https://github.com/pan17/dsh-wechat) 之上，注入鲸鱼娘短句人设，并接管日常出站（`[[silent]]` / `---wx-next---` 分气泡）、情绪、主动找主人与 `wx_*` 工具。
 
-> 不重写微信通道；**一行不改** `node_modules/dsh-wechat`。入站→agent、出站→微信由 `dsh-wechat` 负责；本插件只补人设与陪伴侧能力。
+> **一行不改** `node_modules/dsh-wechat`。入站仍由 `dsh-wechat` 转发；出站默认由本插件在 `silent` 模式下投递。
 
 ## 依赖
 
 - DSH `>=0.2.x <0.3`
-- 先安装并扫码登录 **`dsh-wechat` >= 0.13**
+- **`dsh-wechat` >= 0.13**（先装并扫码）
 - Node `>=22.19`
-
-> `dsh-wechat` 0.13 没有对外 Cordis service，只注册 `send_wechat` 工具并把
-> 「微信用户 → DSH session」写进 `~/.dsh-wechat/state.json`。
-> 本插件读取这两样东西：没有绑定文件时，人设注入返回空、主动发言不启动。
 
 ## 安装
 
 ```bash
-# 1. 微信通道
 dsh plugin --profile web add dsh-wechat
-
-# 2. 本插件（推荐从 GitHub）
 dsh plugin --profile web add github:CatCatCccC/dsh-wechat-whale-companion
-
-# Docker 示例：
-# docker exec -it dsh-harness dsh plugin --profile web add github:CatCatCccC/dsh-wechat-whale-companion
+# Docker: docker exec -it dsh-harness dsh plugin --profile web add github:CatCatCccC/dsh-wechat-whale-companion
 # docker restart dsh-harness
 ```
 
 网页「设置 → 插件」也可填：`github:CatCatCccC/dsh-wechat-whale-companion`。
 
-重启 `dsh web`（或 `docker restart dsh-harness`）。默认不填 `ownerWxid`：跟随 `dsh-wechat` 已绑定的首个微信用户。
+装完后建议：
 
-## 做什么 / 不做什么
+```text
+/preset switch 微信鲸鱼娘
+/session new
+```
+
+（本包会注册轻量预设「微信鲸鱼娘」，**不会**强行改你的默认预设。）
+
+## 出站接管（0.2）
+
+默认：
+
+1. 启动时把 `~/.dsh-wechat/config.json` 的 `silent` 写成 `true`（保留其它字段）
+2. 监听绑定会话的 `assistant/message` → `speak()`（清洗 + 分气泡 + `send_wechat`）
+
+这样日常聊天也能用 `[[silent]]` 和 `---wx-next---`。  
+若关闭 `deliverAssistant` 又关掉 silent，会回到「dsh-wechat 自己推原文」。
+
+观测：`http://127.0.0.1:3199/physical` 看 `health` / `wechat.silent` / `outbound`。
+
+## 能力
 
 | 能力 | 说明 |
 | --- | --- |
-| prompt | 每轮规则 + 鲸鱼 SOUL/STYLE；`systemPrompt.section` 注入，默认只给微信绑定会话 |
-| persona | 心情/精力/亲和 + 主动找主人 |
-| guard | `[[silent]]`、剥旁白；只作用于本插件 `speak()` |
-| rhythm | 本插件 `speak()` 的分气泡/延迟 |
-| sleep / lastword | 从绑定会话的 `session/event` 观察 |
-| diary / promise | `wx_diary`、`wx_promise`；promise 到点提醒 |
-| tier / circadian | 亲密度文案与主动发言时段门控 |
-| media | 发图 / `assets/stickers` 表情 |
-| http `/physical` | 观测面，默认 `127.0.0.1:3199` |
-
-日常自动回复由 **`dsh-wechat`** 推送，不经过本插件的 `speak()`。静默/结论请用它自带的 `/silent`、`/final`。
+| prompt | SOUL/STYLE + 精简 RULES；心情用语词；默认只注入微信绑定会话 |
+| outbound | 接管 assistant 出站（需 silent） |
+| persona | 心情/精力/亲和 + **意图化主动找你**（沉默加权、偶发贴纸） |
+| guard / rhythm | `[[silent]]`、分气泡延迟 |
+| diary / promise | `wx_diary` / `wx_promise` |
+| media | `wx_send_image` / `wx_sticker`（本地 + **搜狗等表情包搜索缓存**） |
+| http `/physical` | 含 `health` 诊断；可选 `token` |
 
 ## 配置（节选）
-
-见 `cordis.patch.yml`（默认在 `normalizeConfig`）。常用：
 
 ```yaml
 - id: dsh-wechat-whale-companion
   config:
-    ownerWxid: ""             # 空 = 跟随 dsh-wechat 已绑定用户
-    wechatStorageDir: ""      # 空 = ~/.dsh-wechat
+    ownerWxid: ""
+    wechatStorageDir: ""
     modules:
+      outbound:
+        deliverAssistant: true
+        ensureWechatSilent: true
       prompt:
-        scope: wechat         # wechat = 只注入绑定会话；all = 全 profile
-      rhythm:
-        bubbleDelayMs: "600,1800"
-      toolGuard:
-        enabled: false        # 开启会拦整个 profile 的危险工具，慎用
+        scope: wechat
+        personaDir: ""          # 空 = 包内 assets/persona
+      persona:
+        proactiveChance: 0.18          # 基础概率；主人沉默越久越高
+        proactiveCooldownMin: 22
+        proactiveMinOwnerGapMin: 12    # 主人刚聊过不主动
+        proactiveStickerChance: 0.28   # 主动时偶发表情
+      media:
+        search: true            # 搜狗表情包（ruseo / apihz），免费国内
+        searchStyle: cute       # cute=偏可爱/软萌/治愈；raw=原词不改
+        searchCacheMax: 80
+        searchCooldownMs: 8000
+      http:
+        port: 3199
+        token: ""               # 非空则 /physical?token=...
 ```
 
-表情图放到 `assets/stickers/`（png/jpg/gif/webp），用工具 `wx_sticker`。
+状态目录：`~/.dsh/plugins/dsh-wechat-whale-companion/`。  
+搜到的表情缓存在：`…/stickers-cache/`。
 
-状态目录默认：`~/.dsh/plugins/dsh-wechat-whale-companion/`。
+表情搜索源（按顺序尝试）：
+1. `api.ruseo.cn` 搜狗表情包（无需 Key）
+2. `cn.apihz.cn` 搜狗通道（公共 id/key，共享限频）
+3. `cn.apihz.cn` 官方表情库
 
-## 运行时 API
+`searchStyle: cute`（默认）会把「傲娇」变成「傲娇可爱/软萌/治愈」再搜，同一池里更偏好看一点；要斗图表情改 `raw`。
 
-`ctx.get('whaleCompanion')`：
+> 均为第三方免费接口，可能限频或失效；失败时用颜文字。注意版权，建议自用。
 
-- `speak(text)` — guard 清洗后分气泡发送（主动发言 / 约定提醒 / 工具）
-- `reprobeWechat()` — 重新探测 `send_wechat`
+## API
 
-观测：`http://127.0.0.1:3199/physical`
-
-## 人设
-
-默认：`assets/persona/SOUL.md`、`STYLE.md`。
+`ctx.get('whaleCompanion')`：`speak(text)`、`reprobeWechat()`。
 
 ## 边界
 
-- **依赖 `dsh-wechat` 绑定**：通过 `~/.dsh-wechat/state.json` 的 `users[*].sessionId` 识别微信会话。
-- **出站走 `send_wechat`**：受其限流与队列约束。
-- **`toolGuard` 是全局的**：默认关闭。
-- ClawBot **无微信群**；主动推送受 iLink `context_token` 限制，失败时需主人先发一条续期。
-- 用**小号**；面板与 `/physical` 勿暴露公网。
+- 依赖 `~/.dsh-wechat/state.json` 会话绑定
+- 主动推送受 iLink `context_token` 限制；失败时主人先发一句续期
+- `toolGuard` 默认关（全局拦工具）
+- 用小号；勿把 3199 暴露公网
 
 ## 测试
 

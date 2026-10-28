@@ -13,7 +13,9 @@ describe('config', () => {
     assert.equal(c.modules.rhythm.enabled, true)
     assert.equal(c.modules.media.enabled, false)
     assert.equal(c.modules.prompt.scope, 'wechat')
-    assert.equal(c.lockFirstPeer, undefined)
+    assert.equal(c.modules.outbound.deliverAssistant, true)
+    assert.equal(c.modules.persona.proactiveChance, 0.18)
+    assert.equal(c.modules.persona.proactiveStickerChance, 0.28)
     assert.equal(c.modules.stamp, undefined)
   })
 
