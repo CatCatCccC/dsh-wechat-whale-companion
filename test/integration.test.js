@@ -73,6 +73,46 @@ describe('host integration', () => {
     dispose()
   })
 
+  it('waits for a late systemPrompt service instead of dropping the persona', () => {
+    const sections = []
+    let service
+    let injected
+    const ctx = {
+      get(name) {
+        return name === 'systemPrompt' ? service : undefined
+      },
+      inject(deps, callback) {
+        assert.deepEqual(deps, ['systemPrompt'])
+        injected = callback
+        return () => {}
+      },
+    }
+    const runtime = {
+      config: { modules: { prompt: { enabled: true, scope: 'wechat' } } },
+      log: { info() {}, warn() {} },
+      stats: {},
+      persona: { snapshot: () => ({ mood: 60 }), styleHint: () => '' },
+      wechatSessions: { matches: () => true },
+    }
+
+    const dispose = applyPrompt(ctx, runtime)
+    assert.equal(runtime.prompt.registered, false)
+    assert.equal(sections.length, 0)
+
+    service = {
+      section(entry) {
+        sections.push(entry)
+        return () => {}
+      },
+    }
+    injected()
+
+    assert.equal(runtime.prompt.registered, true)
+    assert.equal(runtime.prompt.source, 'section')
+    assert.equal(sections.length, 1)
+    dispose()
+  })
+
   it('uses dsh-wechat send_wechat when no legacy wechat service exists', async () => {
     const calls = []
     const tool = {

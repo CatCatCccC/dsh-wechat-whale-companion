@@ -1,5 +1,10 @@
 # DEVLOG
 
+## 0.1.11
+
+- Fix persona section never registering: `systemPrompt` is not guaranteed to be mounted when the profile bundle's `apply()` runs, so the one-shot `ctx.get('systemPrompt')` in 0.1.10 returned undefined and the plugin silently injected nothing (`prompt.injected=0`, `prompt.skipped=0`). Registration now waits with `ctx.inject(['systemPrompt'], …)` plus a short poll, and records `prompt.registered` / `prompt.source` in `/physical`.
+- Add a regression test for a `systemPrompt` service that appears after `apply()`.
+
 ## 0.1.10
 
 - Persona not sounding like 鲸鱼娘: inject via `systemPrompt.section` (system instructions), not only weak `context()` user-snapshots.
