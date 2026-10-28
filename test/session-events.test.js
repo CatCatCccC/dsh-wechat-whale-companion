@@ -32,6 +32,25 @@ function makeHost(tools) {
 }
 
 describe('dsh-wechat session observation', () => {
+  it('wires runtime.speak for proactive / promise', async () => {
+    const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), 'whale-speak-'))
+    const { ctx, services } = makeHost()
+    const handle = apply(ctx, {
+      stateDir,
+      modules: {
+        http: { enabled: false },
+        outbound: { deliverAssistant: false, ensureWechatSilent: false },
+      },
+    })
+    const api = services.get('whaleCompanion')
+    assert.equal(typeof api.speak, 'function')
+    assert.equal(typeof api.runtime.speak, 'function')
+    // No wechat channel → speak reports skipped, not throw
+    const r = await api.runtime.speak('喂')
+    assert.ok(r.skipped === 'no-channel' || r.silent || (r.sent ?? 0) === 0)
+    handle.dispose()
+  })
+
   it('feeds persona / sleep / lastword only for bound sessions', () => {
     const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), 'whale-events-'))
     const wechatDir = fs.mkdtempSync(path.join(os.tmpdir(), 'whale-wechat-'))
@@ -87,6 +106,11 @@ describe('dsh-wechat session observation', () => {
       },
     })
     assert.equal(runtime.persona.snapshot().lastOwnerAt, guiBefore)
+
+    // Proactive-style night ping must not self-sleep (「该睡了吧」contains 睡了)
+    runtime.persona.setAsleep(false)
+    runtime.persona.observeOutbound('喂，该睡了吧')
+    assert.equal(runtime.persona.snapshot().asleep, false)
 
     listener({ id: 'session-wechat' }, {
       type: 'assistant/message',

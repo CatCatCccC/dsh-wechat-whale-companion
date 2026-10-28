@@ -1,5 +1,21 @@
 # DEVLOG
 
+## 0.2.19
+
+- Persona: `爱你`/`想你`/`在吗` no longer treated as dismiss (removed `length<=2` short-circuit); soft negations like `不喜欢你` skipped.
+- Sleep: proactive「该睡了吧」no longer matches sleep detector; only clear sleep utterances (晚安/我睡了…).
+- Outbound: wire `runtime.speak` (was only on whaleCompanion API — proactive/promise never hit guard/fingerprint); `speak()` forwards `agentId`/`to`; treat `sent===0` as failure; cooldown/recent only after successful send.
+- Circadian: soft chance cut outside usual hours instead of hard skip.
+- Memory: `formatWhen` uses Asia/Shanghai; `factKey` forces `kind=fact`.
+
+## 0.2.18
+
+- Stickers: alias `想你/想念` for proactive miss; `喝水` for hydrate; `findMeme` prefers name/query over tag when both set; stage names keep extension when truncating; drop unused `index.db` (~4MB) — runtime uses `index.json` only.
+
+## 0.2.17
+
+- Stickers: Chinese aliases (干饭/比心/困了…) now prefer caption/keyword match inside the mood bucket instead of pure random (avoids 干饭→加班).
+
 ## 0.2.16
 
 - Stickers: expand packs to ~358 images (大肥鱼/学图、鲸鱼娘、女仆、泡泡、GPT大肥鱼、官方1号); inventory shows Chinese mood buckets; all fine-tags mapped into happy/angry/sad/shy/confused/daily.

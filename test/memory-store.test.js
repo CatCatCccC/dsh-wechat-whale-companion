@@ -37,6 +37,26 @@ describe('fish memory store', () => {
     assert.match(active[0].text, /一米七二/)
   })
 
+  it('factKey forces kind=fact even if draft says event', () => {
+    let items = []
+    let r = remember(items, {
+      text: '喜欢米饭',
+      kind: 'fact',
+      factKey: '主人.喜好',
+    })
+    items = r.items
+    r = remember(items, {
+      text: '今天说喜欢面条',
+      kind: 'event',
+      factKey: '主人.喜好',
+    })
+    items = r.items
+    assert.equal(r.item.kind, 'fact')
+    const active = items.filter((i) => i.factKey === '主人.喜好' && !i.superseded)
+    assert.equal(active.length, 1)
+    assert.match(active[0].text, /面条/)
+  })
+
   it('recalls by evidence and keeps facts', () => {
     const now = Date.now()
     const items = [
@@ -95,11 +115,12 @@ describe('fish memory store', () => {
     assert.equal(picked.events.length, 0)
   })
 
-  it('dayKey and formatWhen are stable', () => {
+  it('dayKey and formatWhen use Asia/Shanghai', () => {
+    // 2026-09-01 00:30 UTC = 08:30 Shanghai same calendar day
     const now = Date.UTC(2026, 9, 28, 4, 0, 0)
-    assert.match(dayKey(now, 'Asia/Shanghai'), /^\d{4}-\d{2}-\d{2}$/)
-    assert.equal(formatWhen(Date.UTC(2026, 8, 1), now), '09-01')
-    assert.match(formatWhen(Date.UTC(2025, 8, 1), now), /去年/)
-    assert.match(formatWhen(Date.UTC(2024, 8, 1), now), /^2024-/)
+    assert.equal(dayKey(now, 'Asia/Shanghai'), '2026-10-28')
+    assert.equal(formatWhen(Date.UTC(2026, 8, 1, 0, 30), now, 'Asia/Shanghai'), '09-01')
+    assert.match(formatWhen(Date.UTC(2025, 8, 1, 0, 30), now, 'Asia/Shanghai'), /去年/)
+    assert.match(formatWhen(Date.UTC(2024, 8, 1, 0, 30), now, 'Asia/Shanghai'), /^2024-/)
   })
 })

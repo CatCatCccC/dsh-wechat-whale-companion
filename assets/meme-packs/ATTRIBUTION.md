@@ -16,7 +16,7 @@
 
 合计约 **358** 张。详细许可见上游 [LICENSES.md](https://github.com/yyh-001/dsh-meme-packs/blob/main/LICENSES.md)。私人微信陪伴自用；请勿擅自商用。
 
-运行时读各包 `index.json`（由 `index.db` 导出）：
+运行时只读各包 `index.json`（不携带 `index.db`，减小安装体积）。若从上游 ZIP 重新导入带 `index.db` 的包，在**仓库根目录**再导出（`scripts/` 不随 npm 包发布）：
 
 ```bash
 node --experimental-sqlite scripts/export-meme-indexes.mjs

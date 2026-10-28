@@ -42,9 +42,39 @@ describe('meme packs', () => {
     const byAlias = findMeme(cat, { query: '干饭', random: () => 0 })
     assert.equal(byAlias.ok, true)
     assert.equal(byAlias.meme.bucket, 'daily')
+    assert.match(
+      `${byAlias.meme.caption} ${byAlias.meme.keywords} ${byAlias.meme.fileName}`,
+      /干饭|吃饭|饭/,
+    )
 
     const byKw = findMeme(cat, { query: '比心', random: () => 0 })
     assert.equal(byKw.ok, true)
+    assert.match(
+      `${byKw.meme.caption} ${byKw.meme.keywords} ${byKw.meme.fileName}`,
+      /比心|爱心/,
+    )
+
+    const miss = findMeme(cat, { query: '想你', random: () => 0 })
+    assert.equal(miss.ok, true)
+    assert.equal(miss.meme.bucket, 'happy')
+
+    const drink = findMeme(cat, { query: '喝水', random: () => 0 })
+    assert.equal(drink.ok, true)
+    assert.equal(drink.source, 'pack-alias')
+    assert.match(
+      `${drink.meme.caption} ${drink.meme.keywords}`,
+      /喝水|杯子|喝/,
+    )
+
+    // name wins over conflicting tag
+    const both = findMeme(cat, { tag: 'sad', query: '比心', random: () => 0 })
+    assert.equal(both.ok, true)
+    assert.equal(both.source, 'pack-alias')
+    assert.notEqual(both.meme.bucket, 'sad')
+    assert.match(
+      `${both.meme.caption} ${both.meme.keywords} ${both.meme.fileName}`,
+      /比心|爱心/,
+    )
   })
 
   it('scores caption hits', () => {

@@ -135,6 +135,39 @@ describe('proactive', () => {
     )
   })
 
+  it('softens chance outside circadian hours instead of hard skip', () => {
+    // 07:00 UTC → 15:00 Shanghai; active hours only morning/noon
+    const day = Date.parse('2026-10-28T07:00:00Z')
+    const base = {
+      now: day,
+      asleep: false,
+      energy: 70,
+      mood: 60,
+      affinity: 20,
+      lastProactiveAt: day - 40 * 60 * 1000,
+      lastOwnerAt: day - 30 * 60 * 1000,
+      chance: 1,
+      cooldownMin: 20,
+      minOwnerGapMin: 10,
+      stickerChance: 0,
+      hasSendText: true,
+      hasOwner: true,
+      timeZone: 'Asia/Shanghai',
+      activeHours: [8, 9, 12],
+    }
+    // random 0 → always fire even with reduced p
+    assert.equal(planProactiveTick({ ...base, random: () => 0 }).fire, true)
+    // random just above 0.35 → would fail soft gate (p*=0.35 with chance 1 → 0.35)
+    assert.equal(
+      planProactiveTick({ ...base, random: () => 0.4 }).fire,
+      false,
+    )
+    assert.equal(
+      planProactiveTick({ ...base, random: () => 0.4 }).reason,
+      'chance',
+    )
+  })
+
   it('pushRecent caps buffer', () => {
     let r = []
     for (let i = 0; i < 12; i++) r = pushRecent(r, `line${i}`, 5)

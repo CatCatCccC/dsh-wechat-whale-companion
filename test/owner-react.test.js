@@ -17,6 +17,22 @@ describe('reactToOwnerText', () => {
     assert.equal(r.affinityDelta, 0.4)
   })
 
+  it('short soft lines are not dismiss (爱你/想你/在吗)', () => {
+    for (const t of ['爱你', '想你', '抱抱', '么么']) {
+      const r = reactToOwnerText(t)
+      assert.equal(r.kind, 'apology', t)
+      assert.equal(r.moodDelta, 2, t)
+    }
+    const ping = reactToOwnerText('在吗')
+    assert.equal(ping.kind, 'normal')
+    assert.equal(ping.moodDelta, 0)
+  })
+
+  it('does not soft-boost 不喜欢你', () => {
+    const r = reactToOwnerText('不喜欢你了')
+    assert.notEqual(r.kind, 'apology')
+  })
+
   it('boosts on praise', () => {
     const r = reactToOwnerText('你好可爱')
     assert.equal(r.kind, 'praise')
