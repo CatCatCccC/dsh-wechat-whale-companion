@@ -1,0 +1,13 @@
+{
+  "id": "maid-emoji",
+  "name": "女仆表情包",
+  "version": "1.0.0",
+  "description": "47 张女仆看板娘表情包：开心/生气/难过/害羞/困惑/日常六情绪全覆盖，文件名即语义。转载自 plolpl789/dsh-maid-emoji 内置表情；女仆形象二次设计由 ZipZipPipe 创作（CC BY-NC-SA 4.0），仅限非商业使用、需署名。",
+  "tags": [
+    "maid",
+    "maid-emoji",
+    "custom"
+  ],
+  "license": "CC-BY-NC-SA-4.0",
+  "maintainer": "CBEdwin"
+}

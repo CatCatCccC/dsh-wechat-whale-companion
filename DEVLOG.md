@@ -1,5 +1,13 @@
 # DEVLOG
 
+## 0.2.16
+
+- Stickers: expand packs to ~358 images (大肥鱼/学图、鲸鱼娘、女仆、泡泡、GPT大肥鱼、官方1号); inventory shows Chinese mood buckets; all fine-tags mapped into happy/angry/sad/shy/confused/daily.
+
+## 0.2.15
+
+- Stickers: bundle dsh-meme-packs under `assets/meme-packs` (caption/keywords via `index.json`); `wx_sticker` prefers `tag=` / 中文词 pack hit, then legacy files, then Sogou search. See `assets/meme-packs/ATTRIBUTION.md`.
+
 ## 0.2.14
 
 - Persona authenticity: `【此刻】` injects tier voice + mood speech rules + day-part + length bias (no separate styleHint line); owner text drives mood/affinity via `reactToOwnerText` (dismiss / apology / praise / 大肥鱼); thicker SOUL habits; sticker rules allow sulky short reply after send; proactive pools less「本小姐」boilerplate.

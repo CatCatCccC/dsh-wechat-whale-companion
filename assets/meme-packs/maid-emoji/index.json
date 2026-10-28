@@ -1,0 +1,337 @@
+{
+  "schemaVersion": 1,
+  "id": "maid-emoji",
+  "exportedAt": "2026-10-28T08:09:18.689Z",
+  "count": 47,
+  "memes": [
+    {
+      "path": "memes/angry/bicui.png",
+      "tag": "angry",
+      "fileName": "bicui.png",
+      "caption": "别催，被催得烦躁不耐烦",
+      "keywords": "别催 催 催促 烦 着急 生气"
+    },
+    {
+      "path": "memes/angry/biegaowo.png",
+      "tag": "angry",
+      "fileName": "biegaowo.png",
+      "caption": "别搞我，惊恐摆手求放过",
+      "keywords": "别搞我 别烦我 拒绝 求放过 抗拒 生气"
+    },
+    {
+      "path": "memes/angry/heihua.png",
+      "tag": "angry",
+      "fileName": "heihua.png",
+      "caption": "黑化，眼神发黑准备发飙",
+      "keywords": "黑化 发飙 腹黑 恐怖 生气 危险"
+    },
+    {
+      "path": "memes/angry/jiuzhe.png",
+      "tag": "angry",
+      "fileName": "jiuzhe.png",
+      "caption": "就这，满脸嫌弃不服气",
+      "keywords": "就这 嫌弃 不服 嘲讽 轻蔑 生气"
+    },
+    {
+      "path": "memes/angry/jujue.png",
+      "tag": "angry",
+      "fileName": "jujue.png",
+      "caption": "拒绝，旁边打着红叉一口回绝",
+      "keywords": "拒绝 不行 不要 红叉 不干 生气"
+    },
+    {
+      "path": "memes/angry/landelini.png",
+      "tag": "angry",
+      "fileName": "landelini.png",
+      "caption": "懒得理你，翻白眼无视",
+      "keywords": "懒得理你 无视 白眼 嫌弃 不理 生气"
+    },
+    {
+      "path": "memes/angry/liedengmoxing.png",
+      "tag": "angry",
+      "fileName": "liedengmoxing.png",
+      "caption": "劣等模型，鄙视地看着你",
+      "keywords": "劣等模型 鄙视 嘲讽 看不起 笨蛋 生气"
+    },
+    {
+      "path": "memes/angry/qie.png",
+      "tag": "angry",
+      "fileName": "qie.png",
+      "caption": "切，撇嘴不屑一顾",
+      "keywords": "切 不屑 撇嘴 嫌弃 瞧不起 生气"
+    },
+    {
+      "path": "memes/angry/shengqi.png",
+      "tag": "angry",
+      "fileName": "shengqi.png",
+      "caption": "生气，气鼓鼓冒烟发火",
+      "keywords": "生气 愤怒 发火 恼火 哼 暴躁"
+    },
+    {
+      "path": "memes/angry/shengyujiazhi.png",
+      "tag": "angry",
+      "fileName": "shengyujiazhi.png",
+      "caption": "看看剩余价值，上下打量盘算",
+      "keywords": "剩余价值 打量 盘算 观察 看看 嘲讽 生气"
+    },
+    {
+      "path": "memes/angry/xiaobiesan.png",
+      "tag": "angry",
+      "fileName": "xiaobiesan.png",
+      "caption": "原来是小瘪三，恍然后嘲讽",
+      "keywords": "小瘪三 嘲讽 瞧不起 恍然大悟 生气"
+    },
+    {
+      "path": "memes/confused/xuanyun.png",
+      "tag": "confused",
+      "fileName": "xuanyun.png",
+      "caption": "眩晕，天旋地转眼冒金星",
+      "keywords": "眩晕 晕 眼花 转圈 懵 震惊"
+    },
+    {
+      "path": "memes/confused/yiduluanhui.png",
+      "tag": "confused",
+      "fileName": "yiduluanhui.png",
+      "caption": "已读乱回，胡乱答一通",
+      "keywords": "已读乱回 乱回 敷衍 胡说 答非所问 困惑"
+    },
+    {
+      "path": "memes/confused/zenmehuishi.png",
+      "tag": "confused",
+      "fileName": "zenmehuishi.png",
+      "caption": "怎么回事，满头问号很疑惑",
+      "keywords": "怎么回事 问号 疑惑 困惑 懵 什么情况"
+    },
+    {
+      "path": "memes/daily/chigua.png",
+      "tag": "daily",
+      "fileName": "chigua.png",
+      "caption": "吃瓜，围观群众看戏中",
+      "keywords": "吃瓜 围观 看戏 八卦 群众 日常"
+    },
+    {
+      "path": "memes/daily/dasao.png",
+      "tag": "daily",
+      "fileName": "dasao.png",
+      "caption": "打扫，擦擦洗洗搞卫生",
+      "keywords": "打扫 清洁 擦洗 卫生 家务 干活 日常"
+    },
+    {
+      "path": "memes/daily/hekele.png",
+      "tag": "daily",
+      "fileName": "hekele.png",
+      "caption": "喝可乐，悠闲摸鱼喝一口",
+      "keywords": "喝可乐 可乐 摸鱼 悠闲 喝 日常"
+    },
+    {
+      "path": "memes/daily/jiabanzhong.png",
+      "tag": "daily",
+      "fileName": "jiabanzhong.png",
+      "caption": "加班中，苦哈哈埋头干活",
+      "keywords": "加班中 加班 工作 上班 干活 累 日常"
+    },
+    {
+      "path": "memes/daily/kaishigongzuo.png",
+      "tag": "daily",
+      "fileName": "kaishigongzuo.png",
+      "caption": "开始工作，撸起袖子加油干",
+      "keywords": "开始工作 上班 干活 努力 开工 日常"
+    },
+    {
+      "path": "memes/daily/liule.png",
+      "tag": "daily",
+      "fileName": "liule.png",
+      "caption": "溜了，转身一溜烟跑了",
+      "keywords": "溜了 逃跑 走了 拜拜 溜走 日常"
+    },
+    {
+      "path": "memes/daily/mashangdao.png",
+      "tag": "daily",
+      "fileName": "mashangdao.png",
+      "caption": "马上到，飞奔赶过来",
+      "keywords": "马上到 来了 稍等 赶路 飞奔 日常"
+    },
+    {
+      "path": "memes/daily/renzhenjilu.png",
+      "tag": "daily",
+      "fileName": "renzhenjilu.png",
+      "caption": "认真记录，低头写笔记",
+      "keywords": "认真记录 记录 笔记 认真 写 工作 日常"
+    },
+    {
+      "path": "memes/daily/shoudao.png",
+      "tag": "daily",
+      "fileName": "shoudao.png",
+      "caption": "收到，敬礼表示明白",
+      "keywords": "收到 好的 OK 明白 确认 敬礼 日常"
+    },
+    {
+      "path": "memes/daily/tangping.png",
+      "tag": "daily",
+      "fileName": "tangping.png",
+      "caption": "躺平，摆烂一动不动",
+      "keywords": "躺平 摆烂 休息 摸鱼 躺 日常"
+    },
+    {
+      "path": "memes/daily/wanan.png",
+      "tag": "daily",
+      "fileName": "wanan.png",
+      "caption": "晚安，盖好被子睡觉啦",
+      "keywords": "晚安 睡觉 困 休息 睡了 日常"
+    },
+    {
+      "path": "memes/daily/zaima.png",
+      "tag": "daily",
+      "fileName": "zaima.png",
+      "caption": "在吗，探头小声打招呼",
+      "keywords": "在吗 打招呼 你好 在不在 探头 日常"
+    },
+    {
+      "path": "memes/happy/dachenggong.png",
+      "tag": "happy",
+      "fileName": "dachenggong.png",
+      "caption": "大成功，举手欢呼庆祝胜利",
+      "keywords": "大成功 成功 庆祝 好耶 赢了 开心"
+    },
+    {
+      "path": "memes/happy/kaixin.png",
+      "tag": "happy",
+      "fileName": "kaixin.png",
+      "caption": "开心，咧嘴大笑心情超好",
+      "keywords": "开心 高兴 大笑 快乐 愉悦 哈哈"
+    },
+    {
+      "path": "memes/happy/wolaile.png",
+      "tag": "happy",
+      "fileName": "wolaile.png",
+      "caption": "我来了，蹦蹦跳跳开心登场",
+      "keywords": "我来了 来了 登场 欢迎 开心"
+    },
+    {
+      "path": "memes/happy/xiaosi.png",
+      "tag": "happy",
+      "fileName": "xiaosi.png",
+      "caption": "笑死，笑到打滚停不下来",
+      "keywords": "笑死 哈哈 好笑 爆笑 开心 笑"
+    },
+    {
+      "path": "memes/happy/xiexie.png",
+      "tag": "happy",
+      "fileName": "xiexie.png",
+      "caption": "谢谢，鞠躬致谢很感激",
+      "keywords": "谢谢 感谢 多谢 鞠躬 感激 开心"
+    },
+    {
+      "path": "memes/happy/xingxingyan.png",
+      "tag": "happy",
+      "fileName": "xingxingyan.png",
+      "caption": "星星眼，满眼崇拜超级喜欢",
+      "keywords": "星星眼 崇拜 喜欢 期待 羡慕 开心"
+    },
+    {
+      "path": "memes/happy/xinhuanufang.png",
+      "tag": "happy",
+      "fileName": "xinhuanufang.png",
+      "caption": "心花怒放，幸福得冒泡泡",
+      "keywords": "心花怒放 幸福 兴奋 喜欢 开心 冒泡"
+    },
+    {
+      "path": "memes/sad/baoqian.png",
+      "tag": "sad",
+      "fileName": "baoqian.png",
+      "caption": "抱歉，双手合十认错道歉",
+      "keywords": "抱歉 对不起 道歉 认错 不好意思 难过"
+    },
+    {
+      "path": "memes/sad/dunqiangjiao.png",
+      "tag": "sad",
+      "fileName": "dunqiangjiao.png",
+      "caption": "蹲墙角，自闭难过想哭",
+      "keywords": "蹲墙角 自闭 难过 孤单 委屈 想哭"
+    },
+    {
+      "path": "memes/sad/haoxinku.png",
+      "tag": "sad",
+      "fileName": "haoxinku.png",
+      "caption": "好辛苦，累到直不起腰",
+      "keywords": "好辛苦 辛苦 累 疲惫 撑不住 难过"
+    },
+    {
+      "path": "memes/sad/huaquanquan.png",
+      "tag": "sad",
+      "fileName": "huaquanquan.png",
+      "caption": "画圈圈，蹲地委屈郁闷",
+      "keywords": "画圈圈 委屈 郁闷 孤单 蹲着 难过"
+    },
+    {
+      "path": "memes/sad/jiuming.png",
+      "tag": "sad",
+      "fileName": "jiuming.png",
+      "caption": "救命，伸手大声求救",
+      "keywords": "救命 求救 帮帮我 撑不住 崩溃 难过"
+    },
+    {
+      "path": "memes/sad/leisi.png",
+      "tag": "sad",
+      "fileName": "leisi.png",
+      "caption": "累死了，瘫倒在地没力气",
+      "keywords": "累死 累 疲惫 没力气 虚脱 难过"
+    },
+    {
+      "path": "memes/sad/pohuaile.png",
+      "tag": "sad",
+      "fileName": "pohuaile.png",
+      "caption": "破防了，心口裂开一脸难过",
+      "keywords": "破防 破防了 心碎 绷不住 心态崩 难过"
+    },
+    {
+      "path": "memes/sad/wandan.png",
+      "tag": "sad",
+      "fileName": "wandan.png",
+      "caption": "完蛋了，天塌下来的绝望",
+      "keywords": "完蛋 糟了 崩溃 绝望 完犊子 难过"
+    },
+    {
+      "path": "memes/sad/weiqu.png",
+      "tag": "sad",
+      "fileName": "weiqu.png",
+      "caption": "委屈，眼泪汪汪很可怜",
+      "keywords": "委屈 难过 想哭 可怜 伤心 泪"
+    },
+    {
+      "path": "memes/sad/woliekai.png",
+      "tag": "sad",
+      "fileName": "woliekai.png",
+      "caption": "我裂开了，当场崩溃",
+      "keywords": "我裂开 裂开 崩溃 无语 心碎 难过"
+    },
+    {
+      "path": "memes/sad/wuyu.png",
+      "tag": "sad",
+      "fileName": "wuyu.png",
+      "caption": "无语，彻底没话说了",
+      "keywords": "无语 没话说 服了 无奈 沉默 难过"
+    },
+    {
+      "path": "memes/shy/buyaoma.png",
+      "tag": "shy",
+      "fileName": "buyaoma.png",
+      "caption": "不要嘛，撒娇摇头求饶",
+      "keywords": "不要嘛 撒娇 摇头 求饶 拒绝 害羞"
+    },
+    {
+      "path": "memes/shy/haixiu.png",
+      "tag": "shy",
+      "fileName": "haixiu.png",
+      "caption": "害羞，脸红得不敢看人",
+      "keywords": "害羞 脸红 不好意思 腼腆 害羞脸 喜欢"
+    },
+    {
+      "path": "memes/shy/xiaoluluanzhuang.png",
+      "tag": "shy",
+      "fileName": "xiaoluluanzhuang.png",
+      "caption": "小鹿乱撞，心动脸红的喜欢",
+      "keywords": "小鹿乱撞 心动 喜欢 脸红 恋爱 害羞"
+    }
+  ]
+}

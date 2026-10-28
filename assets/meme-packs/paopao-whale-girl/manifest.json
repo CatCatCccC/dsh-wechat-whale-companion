@@ -1,0 +1,19 @@
+{
+  "id": "paopao-whale-girl",
+  "name": "泡泡表情包",
+  "version": "1.0.0",
+  "maintainer": "Bolumaile",
+  "license": "CC-BY-NC-SA-4.0",
+  "source": "https://github.com/yyh-001/dsh-meme-packs/issues/8",
+  "upstream": "https://treapgogo.github.io/deepseek-whale-girl/",
+  "description": "泡泡，阿亮家的鲸鱼娘。55 张透明底 Q 版日常表情：叉腰得意、按呆毛、系鞋带、蹲着戳水洼、被摸头愣住、被捏脸鼓脸等，适合斗图、贴纸和视频花字。",
+  "tags": [
+    "泡泡",
+    "鲸鱼娘",
+    "whale",
+    "chibi",
+    "Q版",
+    "透明底",
+    "日常"
+  ]
+}

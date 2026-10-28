@@ -1,0 +1,8 @@
+{
+  "id": "dafeiyu-learned",
+  "name": "大肥鱼·学图",
+  "version": "1.1.1",
+  "maintainer": "hZsFN",
+  "license": "personal",
+  "description": "大肥鱼图库「自动学图」新增的表情（原先并入 dafeiyu-001 v1.2.0，现拆为独立图库）；v1.1.0 新增 6 张共 31 张，v1.1.1 修正 1 条与画面不符的 caption。"
+}

@@ -50,7 +50,7 @@ dsh plugin --profile web add github:CatCatCccC/dsh-wechat-whale-companion
 | guard / rhythm | `[[silent]]`、分气泡延迟 |
 | diary / promise | `wx_diary` / `wx_promise` |
 | memory | **鱼的记忆**（淡忘半衰期、长期事实、配额、`wx_memory`；对标 [dsh-fish-memory](https://github.com/Yuuyuko-uu/dsh-fish-memory) 思路） |
-| media | `wx_send_image` / `wx_sticker`（本地 + **搜狗等表情包搜索缓存**） |
+| media | `wx_sticker`：优先 **dsh-meme 风格本地图库**（大肥鱼/鲸鱼娘，`tag`/中文词）→ 旧 stickers → 搜狗缓存 |
 | http `/physical` | 含 `health` / `memory` 诊断；可选 `token` |
 
 ## 配置（节选）
@@ -81,7 +81,8 @@ dsh plugin --profile web add github:CatCatCccC/dsh-wechat-whale-companion
         dailyQuota: 8           # 每天最多新记几条 event
         bridgeDiary: true       # wx_diary 同时写入 event 记忆
       media:
-        search: true            # 搜狗表情包（ruseo / apihz），免费国内
+        memePacksDir: ""        # 额外图库根目录；空=只用包内 assets/meme-packs
+        search: true            # 本地库未命中时再搜狗（ruseo / apihz）
         searchStyle: cute       # cute=偏可爱/软萌/治愈；raw=原词不改
         searchCacheMax: 80
         searchCooldownMs: 8000
@@ -91,18 +92,14 @@ dsh plugin --profile web add github:CatCatCccC/dsh-wechat-whale-companion
 ```
 
 状态目录：`~/.dsh/plugins/dsh-wechat-whale-companion/`。  
-搜到的表情缓存在：`…/stickers-cache/`。
+内置图库：`assets/meme-packs/`（大肥鱼 + 鲸鱼娘，来自 [dsh-meme-packs](https://github.com/yyh-001/dsh-meme-packs)，见 `ATTRIBUTION.md`）。  
+`wx_sticker` 优先 `tag=` / 中文词命中本地库，再搜网缓存到 `…/stickers-cache/`。
 
-表情搜索源（按顺序尝试）：
-1. `api.ruseo.cn` 搜狗表情包（无需 Key）
-2. `cn.apihz.cn` 搜狗通道（公共 id/key，共享限频）
-3. `cn.apihz.cn` 官方表情库
+搜索源：ruseo 搜狗 → APIHZ。`searchStyle: cute` 偏可爱词；斗图改 `raw`。
 
-`searchStyle: cute`（默认）会把「傲娇」变成「傲娇可爱/软萌/治愈」再搜，同一池里更偏好看一点；要斗图表情改 `raw`。
+发送前拷到会话 `.whale-stickers/` 并带 `agentId`；仍失败可开 dsh-wechat `allowAnyFilePath`。
 
-发送前会把图片拷到微信会话工作区下的 `.whale-stickers/`，并带上绑定会话的 `agentId`（dsh-wechat 按「调用方会话」校验路径；不传会丢掉会话 cwd）。仍失败时可在 dsh-wechat 设置打开 `allowAnyFilePath`。
-
-> 均为第三方免费接口，可能限频或失效；失败时用颜文字。注意版权，建议自用。
+> 搜网接口为第三方免费源，可能限频；图库多为非商业同人许可，建议私人自用。
 
 ## API
 
