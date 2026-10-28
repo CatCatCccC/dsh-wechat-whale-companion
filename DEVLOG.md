@@ -1,5 +1,9 @@
 # DEVLOG
 
+## 0.2.9
+
+- Stickers: stage files into `<sessionCwd>/.whale-stickers/` before `send_wechat` so dsh-wechat's workspace path guard no longer refuses plugin/cache paths (the “图库罢工” symptom).
+
 ## 0.2.8
 
 - Root-cause double bubbles: dsh-wechat `silent` still pushes the final reply; companion `deliverAssistant` was a second push. Default `deliverAssistant: false`. Auto-split kept for proactive/speak only.
