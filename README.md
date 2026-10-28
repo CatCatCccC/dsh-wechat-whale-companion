@@ -2,7 +2,8 @@
 
 DeepSeek Harness（DSH）**微信单人私聊**陪伴插件：挂在 [`dsh-wechat`](https://github.com/pan17/dsh-wechat) 之上，注入鲸鱼娘短句人设，并接管日常出站（`[[silent]]` / `---wx-next---` 分气泡）、情绪、主动找主人与 `wx_*` 工具。
 
-> **一行不改** `node_modules/dsh-wechat`。入站仍由 `dsh-wechat` 转发；出站默认由本插件在 `silent` 模式下投递。
+> **一行不改** `node_modules/dsh-wechat`。入站/日常出站都由 `dsh-wechat` 推送；本插件做人设、情绪、主动找你与 `wx_*` 工具。  
+> 注意：`/silent` 只表示「少发过程、只发最终回复」，**仍会推一条**。不要再开 `deliverAssistant`，否则同一句会发两次。
 
 ## 依赖
 
@@ -30,24 +31,21 @@ dsh plugin --profile web add github:CatCatCccC/dsh-wechat-whale-companion
 
 （本包会注册轻量预设「微信鲸鱼娘」，**不会**强行改你的默认预设。）
 
-## 出站接管（0.2）
+## 出站（重要）
 
-默认：
+默认 **`deliverAssistant: false`**：日常回复只走 `dsh-wechat`，避免双发。  
+`speak()` / 自动拆句仍用于**主动找你、promise 提醒**等插件自己发起的发送。
 
-1. 启动时把 `~/.dsh-wechat/config.json` 的 `silent` 写成 `true`（保留其它字段）
-2. 监听绑定会话的 `assistant/message` → `speak()`（清洗 + 分气泡 + `send_wechat`）
+可选把 `silent: true`（少刷「执行过程」），与是否双发无关。
 
-这样日常聊天也能用 `[[silent]]` 和 `---wx-next---`。  
-若关闭 `deliverAssistant` 又关掉 silent，会回到「dsh-wechat 自己推原文」。
-
-观测：`http://127.0.0.1:3199/physical` 看 `health` / `wechat.silent` / `outbound`。
+观测：`http://127.0.0.1:3199/physical` 看 `health` / `outbound.noDouble`。
 
 ## 能力
 
 | 能力 | 说明 |
 | --- | --- |
 | prompt | SOUL/STYLE + 精简 RULES；心情用语词；默认只注入微信绑定会话 |
-| outbound | 接管 assistant 出站（需 silent） |
+| outbound | 默认不接管日常出站（防双发）；主动发言仍用 speak |
 | persona | 心情/精力/亲和 + **意图化主动找你**（沉默加权、偶发贴纸） |
 | guard / rhythm | `[[silent]]`、分气泡延迟 |
 | diary / promise | `wx_diary` / `wx_promise` |
@@ -63,8 +61,8 @@ dsh plugin --profile web add github:CatCatCccC/dsh-wechat-whale-companion
     wechatStorageDir: ""
     modules:
       outbound:
-        deliverAssistant: true
-        ensureWechatSilent: true
+        deliverAssistant: false        # true 会与 dsh-wechat 双发，勿开
+        ensureWechatSilent: true       # 可选：少发过程气泡
       prompt:
         scope: wechat
         personaDir: ""          # 空 = 包内 assets/persona

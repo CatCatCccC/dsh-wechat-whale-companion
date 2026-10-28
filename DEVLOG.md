@@ -1,5 +1,9 @@
 # DEVLOG
 
+## 0.2.8
+
+- Root-cause double bubbles: dsh-wechat `silent` still pushes the final reply; companion `deliverAssistant` was a second push. Default `deliverAssistant: false`. Auto-split kept for proactive/speak only.
+
 ## 0.2.7
 
 - Stickers: re-bundle sample assets; harden prompt so「发个表情」must call `wx_sticker` (no verbal refusal); show inventory + turn nudge in persona block.
