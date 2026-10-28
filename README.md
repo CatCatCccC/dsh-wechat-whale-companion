@@ -44,13 +44,14 @@ dsh plugin --profile web add github:CatCatCccC/dsh-wechat-whale-companion
 
 | 能力 | 说明 |
 | --- | --- |
-| prompt | SOUL/STYLE + 精简 RULES；心情用语词；默认只注入微信绑定会话 |
+| prompt | SOUL/STYLE + 精简 RULES；【此刻】含档位/心情口吻/时段；默认只注入微信绑定会话 |
 | outbound | 默认不接管日常出站（防双发）；主动发言仍用 speak |
-| persona | 心情/精力/亲和 + **意图化主动找你**（沉默加权、偶发贴纸） |
+| persona | 心情/精力/亲和（跟主人话内容涨跌）+ **意图化主动找你**（沉默加权、偶发贴纸） |
 | guard / rhythm | `[[silent]]`、分气泡延迟 |
 | diary / promise | `wx_diary` / `wx_promise` |
+| memory | **鱼的记忆**（淡忘半衰期、长期事实、配额、`wx_memory`；对标 [dsh-fish-memory](https://github.com/Yuuyuko-uu/dsh-fish-memory) 思路） |
 | media | `wx_send_image` / `wx_sticker`（本地 + **搜狗等表情包搜索缓存**） |
-| http `/physical` | 含 `health` 诊断；可选 `token` |
+| http `/physical` | 含 `health` / `memory` 诊断；可选 `token` |
 
 ## 配置（节选）
 
@@ -72,6 +73,13 @@ dsh plugin --profile web add github:CatCatCccC/dsh-wechat-whale-companion
         proactiveCooldownMin: 22
         proactiveMinOwnerGapMin: 12    # 主人刚聊过不主动
         proactiveStickerChance: 0.28   # 主动时偶发表情
+      memory:
+        enabled: true
+        halfLifeDays: 30        # 事件记忆淡一半的天数；fact 不淡
+        maxInject: 6
+        maxFacts: 3
+        dailyQuota: 8           # 每天最多新记几条 event
+        bridgeDiary: true       # wx_diary 同时写入 event 记忆
       media:
         search: true            # 搜狗表情包（ruseo / apihz），免费国内
         searchStyle: cute       # cute=偏可爱/软萌/治愈；raw=原词不改

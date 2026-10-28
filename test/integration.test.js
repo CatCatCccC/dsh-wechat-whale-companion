@@ -56,8 +56,8 @@ describe('host integration', () => {
       stats: {},
       persona: {
         snapshot: () => ({ mood: 60 }),
-        styleHint: () => '偏短句',
-        moodLine: () => '【此刻】心情还行 精力一般 关系熟人 睡眠=醒',
+        moodLine: () =>
+          '【此刻】心情还行 精力一般 关系熟人 睡眠=醒；口吻：平常短口语；偏短句',
       },
       wechatSessions: {
         has: (id) => id === 'session-wechat',

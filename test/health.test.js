@@ -31,7 +31,10 @@ describe('physical health', () => {
       wechat: { present: true, notes: 'ok' },
       wechatSessions: { list: () => [{ sessionId: 's1' }] },
       media: { listStickers: () => ['a.png'] },
-      stats: { promptInjected: 2, toolsRegistered: { wx_sticker: true } },
+      stats: {
+        promptInjected: 2,
+        toolsRegistered: { wx_sticker: true, wx_memory: true },
+      },
     })
     assert.equal(h.level, 'ok')
     assert.ok(h.checks.every((c) => c.ok))

@@ -1,5 +1,18 @@
 # DEVLOG
 
+## 0.2.14
+
+- Persona authenticity: `【此刻】` injects tier voice + mood speech rules + day-part + length bias (no separate styleHint line); owner text drives mood/affinity via `reactToOwnerText` (dismiss / apology / praise / 大肥鱼); thicker SOUL habits; sticker rules allow sulky short reply after send; proactive pools less「本小姐」boilerplate.
+
+## 0.2.13
+
+- Memory: WeChat-side fish memory aligned with Yuuyuko-uu/dsh-fish-memory ideas — half-life freshness, long-term facts, daily quota, factKey supersede, auto-inject `【记忆】` into persona, `wx_memory` tool; diary can bridge into event memories. Data: `fish-memory.json` under stateDir.
+- Memory hardening: daily quota uses `Asia/Shanghai` day boundary (Docker UTC safe); empty/stopword queries inject facts only (no random event dump); `formatWhen` distinguishes 去年 vs older years; `/physical` checks `tools.wx_memory`.
+
+## 0.2.12
+
+- Persona: thicken `SOUL.md` with situational reactions; loosen `STYLE.md` (default short, allow 2–3 bubbles); align preset prefix (drop daily `---wx-next---` / `[[silent]]`); add flex rule so replies feel less template-locked.
+
 ## 0.2.11
 
 - Tools: wait for DSH `tools` service (`inject` + poll) before registering `wx_*`. One-shot `get('tools')` during `apply()` often no-ops → model claims「发图工具没挂着」. `/physical` now checks `tools.wx_sticker`.
