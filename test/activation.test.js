@@ -64,8 +64,9 @@ describe('plugin activation', () => {
 
     assert.equal(provided.has('whaleCompanion'), true)
     assert.equal(ctx.whaleCompanion, provided.get('whaleCompanion'))
-    assert.equal(typeof ctx.whaleCompanion.ingest, 'function')
     assert.equal(typeof ctx.whaleCompanion.speak, 'function')
+    assert.equal(typeof ctx.whaleCompanion.reprobeWechat, 'function')
+    assert.equal(ctx.whaleCompanion.ingest, undefined)
     handle.dispose()
   })
 })

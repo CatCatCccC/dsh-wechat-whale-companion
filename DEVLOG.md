@@ -1,5 +1,11 @@
 # DEVLOG
 
+## 0.1.12
+
+- WeChat-only slim: drop QQ stubs (`isolation` / `mention` / `poke` / `hands` / `linkcard`), unused `stamp` / `adopt`, and placeholder `temper` / `solitude` / `focus` (no writers).
+- Remove custom-host inbound bridge (`ingest`, `autoIngest`, `deliverToAgent`, `speakOnAgentEnd`, inbound merger). Daily chat stays on `dsh-wechat`; this plugin keeps `speak()` for proactive / promise / tools.
+- README rewritten around the WeChat path only.
+
 ## 0.1.11
 
 - Fix persona section never registering: `systemPrompt` is not guaranteed to be mounted when the profile bundle's `apply()` runs, so the one-shot `ctx.get('systemPrompt')` in 0.1.10 returned undefined and the plugin silently injected nothing (`prompt.injected=0`, `prompt.skipped=0`). Registration now waits with `ctx.inject(['systemPrompt'], …)` plus a short poll, and records `prompt.registered` / `prompt.source` in `/physical`.
