@@ -11,6 +11,76 @@ DeepSeek Harness（DSH）**微信单人私聊**陪伴插件：挂在 [`dsh-wecha
 - **`dsh-wechat` >= 0.13**（先装并扫码）
 - Node `>=22.19`
 
+## 目录结构
+
+```
+dsh-wechat-whale-companion/
+├── package.json              # 入口 exports → lib/index.js；dsh.bundle.patch
+├── cordis.patch.yml          # 注册插件行 + 预设「微信鲸鱼娘」
+├── LICENSE / README / AUTHORITY / DEVLOG
+│
+├── lib/                      # 运行时代码（随 npm 包发布）
+│   ├── index.js              # 插件入口：装配 runtime、挂 modules
+│   ├── core/                 # 无业务副作用的底座
+│   │   ├── config.js         # 默认配置 / 合并
+│   │   ├── ctx.js            # softGet 等 ctx 工具
+│   │   ├── state.js          # mergeDefaults
+│   │   ├── memory-store.js   # 插件状态落盘 ~/.dsh/plugins/...
+│   │   ├── chat-journal.js   # 滚动【近期对话】
+│   │   ├── meme-pack.js      # 本地表情包索引
+│   │   ├── image-search.js   # 搜狗等搜图缓存
+│   │   ├── tools.js          # 工具晚注册
+│   │   ├── wechat.js         # 出站 speak / 绑定探测
+│   │   ├── wechat-config.js  # 读 dsh-wechat 配置
+│   │   └── wechat-state.js   # 读 ~/.dsh-wechat/state.json
+│   └── modules/              # 按能力拆分的功能模块（apply* 模式）
+│       ├── prompt.js         # 注入 SOUL/STYLE/【此刻】/【近期对话】
+│       ├── persona.js        # 心情/精力/亲和/睡着/lastword
+│       ├── mood-words.js     # 【此刻】中文标签
+│       ├── owner-react.js    # 主人话 → 心情涨跌
+│       ├── proactive.js      # 主动找主人意图池
+│       ├── memory.js         # 鱼记忆 + journal + wx_memory
+│       ├── nurture.js        # 日记/约定/关系档/作息
+│       ├── media.js          # wx_sticker
+│       ├── guard.js          # [[silent]] 等
+│       ├── rhythm.js         # 分气泡节奏
+│       ├── owner.js          # ownerWxid 识别
+│       ├── reset.js          # /whale-reset
+│       └── http.js           # :3199 /physical /reset
+│
+├── assets/                   # 静态资源（随包发布）
+│   ├── persona/              # SOUL.md 人设 · STYLE.md 口吻
+│   ├── meme-packs/           # dsh-meme 风格图库（多 pack + ATTRIBUTION）
+│   └── stickers/             # 旧版兜底小图
+│
+├── test/                     # node:test（不进 npm pack）
+└── scripts/                  # 维护脚本，如 export-meme-indexes
+```
+
+人设正文就是女娲蒸馏后的「小鱼思维 OS」（已微信适配），只维护 `assets/persona/`，无第二份 skills 底稿。
+
+| 路径 | 进 npm 包？ | 说明 |
+| --- | --- | --- |
+| `lib/` `assets/` `cordis.patch.yml` | 是 | 运行时必需 |
+| `test/` `scripts/` `DEVLOG.md` | 否 | 开发/参考 |
+
+**运行时状态（不在仓库里）**
+
+| 位置 | 内容 |
+| --- | --- |
+| `~/.dsh/plugins/dsh-wechat-whale-companion/` | fish-memory、chat-journal、mood、diary、promises… |
+| `~/.dsh-wechat/state.json` | 微信会话绑定（依赖 dsh-wechat） |
+
+工作区上层（`鲸鱼娘/`）还有部署笔记等，**不是本 npm 包的一部分**：
+
+```
+鲸鱼娘/
+├── dsh-wechat-whale-companion/   ← 本插件（可独立 git/npm）
+├── linux-deploy-dsh-whale.md
+├── fish.md
+└── _diag/                        # 本地诊断用，勿发布
+```
+
 ## 安装
 
 ```bash

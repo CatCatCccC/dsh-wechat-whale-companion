@@ -1,5 +1,21 @@
 # DEVLOG
 
+## 0.2.28
+
+- Persona: 还原女娲蒸馏全文进 SOUL（工作流/证据/时间线/谱系/诚实边界/对照示例/场景手册），体量约五千字级；STYLE 保留表达 DNA 速查。
+
+## 0.2.27
+
+- Persona: SOUL/STYLE 直接采用女娲蒸馏稿（微信适配）；删除仓库内 `skills/`（避免双源）。
+
+## 0.2.26
+
+- Persona: Nuwa-distill 小鱼思维 OS → SOUL 加厚（中间态）；后由 0.2.27 直接升格为运行时人设。
+
+## 0.2.25
+
+- Reset: WeChat/DSH command `/whale-reset memory|mood|nurture|all`; also `GET /reset?scope=` and `wx_memory action=reset`.
+
 ## 0.2.24
 
 - QQ/whale-loli live parity: SOUL is full 活人版（微信改）；every WeChat turn auto-writes `chat-journal.json` and injects 【近期对话】 so she stops acting amnesiac mid-chat.
