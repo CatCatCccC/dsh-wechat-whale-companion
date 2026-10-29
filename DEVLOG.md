@@ -1,5 +1,14 @@
 # DEVLOG
 
+## 0.2.24
+
+- QQ/whale-loli live parity: SOUL is full 活人版（微信改）；every WeChat turn auto-writes `chat-journal.json` and injects 【近期对话】 so she stops acting amnesiac mid-chat.
+
+## 0.2.23
+
+- Persona: thicken to whale-loli 活人版 level — 铁律 / AI 味黑名单 / 示例；preset prefix aligned; hard nudges for memory/alarm turns.
+- Memory: raise inject/quota; `autoCaptureOwner` for clear 喜好/名字/记住 lines so chat isn't empty when the model skips `wx_memory`.
+
 ## 0.2.22
 
 - Promise: alarms still fire when `asleep` after 晚安 (was skipping the whole tick); poll every 1m; wake-style copy for 起床/叫醒; require `dueAt` on add; prompt insists verbal「记下了」is not enough.
