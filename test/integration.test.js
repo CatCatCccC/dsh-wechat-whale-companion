@@ -57,7 +57,7 @@ describe('host integration', () => {
       persona: {
         snapshot: () => ({ mood: 60 }),
         moodLine: () =>
-          '【此刻】心情还行 精力一般 关系熟人 睡眠=醒；口吻：平常短口语；偏短句',
+          '【此刻】心情还行，精力一般，关系熟人，醒。刚才：被夸了有点飘，别得意太久',
       },
       wechatSessions: {
         has: (id) => id === 'session-wechat',
@@ -71,8 +71,8 @@ describe('host integration', () => {
     assert.equal(sections[0].name, 'whale-companion-persona')
     assert.equal(typeof sections[0].text, 'function')
     assert.match(sections[0].text({ agent: { id: 'session-wechat' } }), /微信鲸鱼娘陪伴规则/)
-    assert.match(sections[0].text({ agent: { id: 'session-wechat' } }), /偏短句/)
     assert.match(sections[0].text({ agent: { id: 'session-wechat' } }), /心情还行/)
+    assert.match(sections[0].text({ agent: { id: 'session-wechat' } }), /刚才：被夸/)
     assert.equal(sections[0].text({ agent: { id: 'session-gui' } }), '')
     // Mood is inlined in section — no duplicate whale-companion-mood context
     assert.equal(contexts.length, 0)

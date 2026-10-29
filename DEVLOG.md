@@ -1,5 +1,18 @@
 # DEVLOG
 
+## 0.2.22
+
+- Promise: alarms still fire when `asleep` after 晚安 (was skipping the whole tick); poll every 1m; wake-style copy for 起床/叫醒; require `dueAt` on add; prompt insists verbal「记下了」is not enough.
+- Prompt: honest vision rule — don't claim to see WeChat images without a vision/OCR path.
+
+## 0.2.21
+
+- Persona: rewrite SOUL/STYLE closer to 大肥鱼短人设（身份+口癖+底线）；【此刻】去掉长「口吻说明书」，改为短状态 +「刚才心里那一下」(feiyu-mood style).
+
+## 0.2.20
+
+- Persona: ban meta narration after stickers（「图发了」「表情包给你了」）；text only reacts to the owner’s words, not the tool action.
+
 ## 0.2.19
 
 - Persona: `爱你`/`想你`/`在吗` no longer treated as dismiss (removed `length<=2` short-circuit); soft negations like `不喜欢你` skipped.
