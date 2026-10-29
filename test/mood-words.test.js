@@ -39,13 +39,12 @@ describe('mood words', () => {
     assert.match(line, /心情闷闷的/)
     assert.match(line, /关系损友/)
     assert.match(line, /刚才：被敷衍/)
-    assert.match(line, /别冷漠/)
+    assert.match(line, /口吻·傲娇/)
     assert.match(line, /别主动自称大肥鱼/)
     assert.match(line, /刚说过「在干嘛」/)
-    assert.doesNotMatch(line, /口吻：/)
   })
 
-  it('formats happy without feeling clutter', () => {
+  it('formats happy as 涩涩 voice', () => {
     const line = formatMoodLine({
       mood: 80,
       energy: 80,
@@ -55,7 +54,8 @@ describe('mood words', () => {
     })
     assert.match(line, /偏开心/)
     assert.match(line, /羁绊/)
+    assert.match(line, /口吻·涩涩/)
     assert.doesNotMatch(line, /刚才：/)
-    assert.doesNotMatch(line, /别冷漠/)
+    assert.doesNotMatch(line, /口吻·傲娇/)
   })
 })
