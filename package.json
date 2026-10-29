@@ -1,6 +1,6 @@
 {
   "name": "dsh-wechat-whale-companion",
-  "version": "0.2.28",
+  "version": "0.2.32",
   "description": "DSH WeChat DM companion: persona, fish-memory, dsh-meme-style local packs, proactive pings",
   "type": "module",
   "main": "lib/index.js",

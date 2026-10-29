@@ -1,6 +1,10 @@
 import { describe, it } from 'node:test'
 import assert from 'node:assert/strict'
-import { resetCompanion } from '../lib/modules/reset.js'
+import {
+  resetCompanion,
+  parseWhaleResetLine,
+  handleWhaleResetText,
+} from '../lib/modules/reset.js'
 
 describe('resetCompanion', () => {
   it('clears memory via runtime hooks', () => {
@@ -35,5 +39,35 @@ describe('resetCompanion', () => {
   it('rejects unknown scope', () => {
     const r = resetCompanion({ stats: {} }, 'nope')
     assert.equal(r.ok, false)
+  })
+
+  it('parses /whale-reset lines', () => {
+    assert.deepEqual(parseWhaleResetLine('/whale-reset all'), {
+      scope: 'all',
+      rawInput: 'all',
+    })
+    assert.equal(parseWhaleResetLine('whale-reset all'), null)
+    assert.equal(parseWhaleResetLine('/help'), null)
+  })
+
+  it('text fallback speaks and clears', async () => {
+    let spoke = ''
+    let mem = 0
+    const runtime = {
+      stats: {},
+      speak: async (t) => {
+        spoke = t
+      },
+      memory: {
+        reset() {
+          mem++
+          return { ok: true }
+        },
+      },
+    }
+    assert.equal(handleWhaleResetText(runtime, '/whale-reset memory'), true)
+    assert.equal(mem, 1)
+    await new Promise((r) => setTimeout(r, 10))
+    assert.match(spoke, /已清空/)
   })
 })

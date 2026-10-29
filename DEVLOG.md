@@ -1,5 +1,21 @@
 # DEVLOG
 
+## 0.2.32
+
+- Persona: rewrite SOUL/STYLE to whale-loli v2-live (QQ活人版) for WeChat; drop Nuwa essay OS.
+
+## 0.2.31
+
+- Persona: ban identity-card dump; who-are-you = short name only.
+
+## 0.2.30
+
+- Persona: ban narrating empty memory（「我这边空空的」）；empty 【记忆】 inject is internal-only.
+
+## 0.2.29
+
+- Fix `/whale-reset`: harden `ctx.commands` inject (同 dsh-wechat)；微信若当未知命令转发，仍拦截清空并 speak 回执。
+
 ## 0.2.28
 
 - Persona: 还原女娲蒸馏全文进 SOUL（工作流/证据/时间线/谱系/诚实边界/对照示例/场景手册），体量约五千字级；STYLE 保留表达 DNA 速查。
