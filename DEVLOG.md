@@ -1,5 +1,13 @@
 # DEVLOG
 
+## 0.2.37
+
+- Vision: WeChat path → `ctx.attachments.saveImage` so **deepseek-flash** sees pixels natively (no Zhipu key). Disable `image-bridge` in bundle patch (it would strip native images without ZHIPU_API_KEY). `mode: describe` kept as optional fallback.
+
+## 0.2.36
+
+- Vision: WeChat inbound `[收到图片] 文件已保存到: path` → Zhipu GLM-4V describe via `agent/pre-step` (dsh-image-bridge only covers GUI image blocks). Needs `ZHIPU_API_KEY`. Prompt: trust 【图片描述】, honest on 【图片识别失败】.
+
 ## 0.2.35
 
 - Persona: 默认单气泡；主人报事实禁「复读点评 / 硬开饿不饿」；早饭作息反例进 SOUL/MODE-LIVE；`journalInject` 16→10 减坏样本自我复制。

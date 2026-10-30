@@ -1,5 +1,13 @@
 # Bundle layer — companion plugin + lightweight WeChat whale preset.
 # Do not export a Config schema from lib/index.js (breaks DSH loader).
+
+# deepseek-flash already accepts images. dsh-image-bridge rewrites image
+# blocks into Zhipu text and, without ZHIPU_API_KEY, becomes [图片识别失败]
+# — which would erase native WeChat vision. Keep the package installed if
+# you want, but leave the plugin stopped.
+- id: image-bridge
+  disabled: true
+
 - insert:
     - id: dsh-wechat-whale-companion
       name: dsh-wechat-whale-companion

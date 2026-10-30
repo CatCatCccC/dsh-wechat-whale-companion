@@ -121,7 +121,8 @@ dsh plugin --profile web add github:CatCatCccC/dsh-wechat-whale-companion
 | diary / promise | `wx_diary` / `wx_promise` |
 | memory | **鱼的记忆**（淡忘半衰期、长期事实、配额、`wx_memory`；对标 [dsh-fish-memory](https://github.com/Yuuyuko-uu/dsh-fish-memory) 思路） |
 | media | `wx_sticker`：优先 **dsh-meme 风格本地图库**（大肥鱼/鲸鱼娘，`tag`/中文词）→ 旧 stickers → 搜狗缓存 |
-| http `/physical` | 含 `health` / `memory` 诊断；可选 `token` |
+| vision | 微信入站图（`文件已保存到: path`）→ DSH attachment，由 **deepseek-flash 原生识图**（无需额外 key）。可选 `vision.mode=describe` 走智谱转写 |
+| http `/physical` | 含 `health` / `memory` / `vision` 诊断；可选 `token` |
 
 ## 配置（节选）
 
@@ -156,6 +157,9 @@ dsh plugin --profile web add github:CatCatCccC/dsh-wechat-whale-companion
         searchStyle: cute       # cute=偏可爱/软萌/治愈；raw=原词不改
         searchCacheMax: 80
         searchCooldownMs: 8000
+      vision:
+        enabled: true
+        mode: native            # native=deepseek-flash 直接看图；describe=智谱转写(需 ZHIPU_API_KEY)
       http:
         port: 3199
         token: ""               # 非空则 /physical?token=...
