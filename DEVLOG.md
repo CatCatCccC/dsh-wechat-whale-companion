@@ -1,5 +1,17 @@
 # DEVLOG
 
+## 0.2.35
+
+- Persona: 默认单气泡；主人报事实禁「复读点评 / 硬开饿不饿」；早饭作息反例进 SOUL/MODE-LIVE；`journalInject` 16→10 减坏样本自我复制。
+
+## 0.2.34
+
+- Persona: mood ≥55 inject MODE-NAUGHTY (dsh-whale-loli v3)；else MODE-LIVE (v2-live)；SOUL 回活人基底。
+
+## 0.2.33
+
+- Persona: mood ≥55 → 涩涩口吻；心情差 → 特别傲娇（仍给温度，不冷漠）。
+
 ## 0.2.32
 
 - Persona: rewrite SOUL/STYLE to whale-loli v2-live (QQ活人版) for WeChat; drop Nuwa essay OS.
