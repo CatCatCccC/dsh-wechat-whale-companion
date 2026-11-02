@@ -50,10 +50,10 @@ describe('mood words', () => {
     assert.match(line, /本轮模式：活人版/)
     assert.match(line, /别主动自称大肥鱼/)
     assert.match(line, /刚说过「在干嘛」/)
-    assert.doesNotMatch(line, /涩涩版/)
+    assert.doesNotMatch(line, /甜宠版|涩涩版/)
   })
 
-  it('formats happy as 涩涩版', () => {
+  it('formats happy as 甜宠版', () => {
     const line = formatMoodLine({
       mood: 80,
       energy: 80,
@@ -63,7 +63,7 @@ describe('mood words', () => {
     })
     assert.match(line, /偏开心/)
     assert.match(line, /羁绊/)
-    assert.match(line, /本轮模式：涩涩版/)
+    assert.match(line, /本轮模式：甜宠版/)
     assert.doesNotMatch(line, /刚才：/)
     assert.doesNotMatch(line, /活人版/)
   })

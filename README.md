@@ -49,7 +49,7 @@ dsh-wechat-whale-companion/
 │       └── http.js           # :3199 /physical /reset
 │
 ├── assets/                   # 静态资源（随包发布）
-│   ├── persona/              # SOUL.md 人设 · STYLE.md 口吻
+│   ├── persona/              # WHALE-PERSONA-*.md（LangBot 大肥鱼）· STYLE.md
 │   ├── meme-packs/           # dsh-meme 风格图库（多 pack + ATTRIBUTION）
 │   └── stickers/             # 旧版兜底小图
 │
@@ -57,7 +57,7 @@ dsh-wechat-whale-companion/
 └── scripts/                  # 维护脚本，如 export-meme-indexes
 ```
 
-人设正文就是女娲蒸馏后的「小鱼思维 OS」（已微信适配），只维护 `assets/persona/`，无第二份 skills 底稿。
+人设主干来自 `whale_persona_plugin`：`WHALE-PERSONA-LIVE.md`（默认）+ 心情高时叠 `WHALE-PERSONA-SWEET.md`；`STYLE.md` / 行为规则保留本通道 `wx_*` 工具约束。
 
 | 路径 | 进 npm 包？ | 说明 |
 | --- | --- | --- |
