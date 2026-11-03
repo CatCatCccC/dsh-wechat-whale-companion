@@ -70,7 +70,7 @@ describe('proactive', () => {
     assert.notEqual(line, '……还在吗')
   })
 
-  it('plans a fire with injected random', () => {
+  it('plans a fire with injected random (legacy pools)', () => {
     // 04:30 UTC = 12:30 Shanghai → meal
     const noon = Date.parse('2026-10-28T04:30:00Z')
     const plan = planProactiveTick({
@@ -88,6 +88,7 @@ describe('proactive', () => {
       hasSendText: true,
       hasOwner: true,
       timeZone: 'Asia/Shanghai',
+      socialEngine: false,
       random: () => 0,
     })
     assert.equal(plan.fire, true)
@@ -153,6 +154,7 @@ describe('proactive', () => {
       hasSendText: true,
       hasOwner: true,
       timeZone: 'Asia/Shanghai',
+      socialEngine: false,
       activeHours: [8, 9, 12],
     }
     // random 0 → always fire even with reduced p

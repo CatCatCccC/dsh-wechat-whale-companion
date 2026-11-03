@@ -1,7 +1,7 @@
 {
   "name": "dsh-wechat-whale-companion",
-  "version": "0.2.41",
-  "description": "DSH WeChat DM companion: daily diary, forced sticker/memory/promise tools, native vision, meme packs",
+  "version": "0.2.45",
+  "description": "DSH WeChat DM companion: social proactive engine, diary, sticker/memory/promise tools, native vision, meme packs",
   "type": "module",
   "main": "lib/index.js",
   "exports": {

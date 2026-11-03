@@ -1,5 +1,21 @@
 # DEVLOG
 
+## 0.2.45
+
+- Proactive persist: flush mood/agenda on successful ping (no debounce stomp); don't rewrite agenda every tick; log `proactive sent`.
+
+## 0.2.44
+
+- Proactive: motive **before** chance dice; miss/continue_thread after ≥4h silence (and promise_soft) **force** fire; base chance 0.28; draft `Promise.race` timeout so hung `ctx.llm` cannot block ticks.
+
+## 0.2.43
+
+- Proactive draft uses **DSH `ctx.llm.stream`** (profile provider/model via `agentDefaultModel`) — removed separate `api.deepseek.com` / `DEEPSEEK_API_KEY` bypass. Fallback remains template/emergency when llm missing.
+
+## 0.2.42
+
+- Proactive rewrite (social engine): motive scoring (continue_thread / promise_soft / miss…) over clock-care pools; daily agenda cap; LLM draft + rule critic + slot/emergency fallback; send forms; per-owner `social-policy.json`; `/physical` motive/form/policy.
+
 ## 0.2.37
 
 - Vision: WeChat path → `ctx.attachments.saveImage` so **deepseek-flash** sees pixels natively (no Zhipu key). Disable `image-bridge` in bundle patch (it would strip native images without ZHIPU_API_KEY). `mode: describe` kept as optional fallback.

@@ -116,12 +116,12 @@ dsh plugin --profile web add github:CatCatCccC/dsh-wechat-whale-companion
 | --- | --- |
 | prompt | SOUL/STYLE + 精简 RULES；【此刻】含档位/心情口吻/时段；默认只注入微信绑定会话 |
 | outbound | 默认不接管日常出站（防双发）；主动发言仍用 speak |
-| persona | 心情/精力/亲和（跟主人话内容涨跌）+ **意图化主动找你**（沉默加权、偶发贴纸） |
+| persona | 心情/精力/亲和 + **社交动机主动找你**（有由头才发、日限额、LLM/模板起草、按回复学政策） |
 | guard / rhythm | `[[silent]]`、分气泡延迟 |
 | diary / promise | `wx_diary` / `wx_promise` |
 | memory | **鱼的记忆**（淡忘半衰期、长期事实、配额、`wx_memory`；对标 [dsh-fish-memory](https://github.com/Yuuyuko-uu/dsh-fish-memory) 思路） |
 | media | `wx_sticker`：优先 **dsh-meme 风格本地图库**（大肥鱼/鲸鱼娘，`tag`/中文词）→ 旧 stickers → 搜狗缓存 |
-| vision | 微信入站图（`文件已保存到: path`）→ DSH attachment，由 **deepseek-flash 原生识图**（无需额外 key）。可选 `vision.mode=describe` 走智谱转写 |
+| vision | 默认 `native`：路径图 → DSH attachment，**会话模型直接看图**（无需额外 key）。仅 `mode=describe` 才旁路智谱（需 `ZHIPU_API_KEY`，一般不用） |
 | http `/physical` | 含 `health` / `memory` / `vision` 诊断；可选 `token` |
 
 ## 配置（节选）
@@ -139,11 +139,14 @@ dsh plugin --profile web add github:CatCatCccC/dsh-wechat-whale-companion
         scope: wechat
         personaDir: ""          # 空 = 包内 assets/persona
       persona:
-        timeZone: Asia/Shanghai        # 安静时段/干饭意图按此时区（防 Docker UTC 误判）
-        proactiveChance: 0.18          # 基础概率；主人沉默越久越高
+        timeZone: Asia/Shanghai        # 安静时段按此时区（防 Docker UTC 误判）
+        proactiveChance: 0.28          # 有动机后的基础概率；久沉默会强制发出
         proactiveCooldownMin: 22
         proactiveMinOwnerGapMin: 12    # 主人刚聊过不主动
-        proactiveStickerChance: 0.28   # 主动时偶发表情
+        proactiveStickerChance: 0.32
+        proactiveSocialEngine: true    # false=旧钟点话术池
+        proactiveLlmDraft: true        # 用 DSH ctx.llm（同聊天模型）；失败回落模板
+        proactiveDailyMax: 3           # 日主动上限（约定软垫可突破）
       memory:
         enabled: true
         halfLifeDays: 30        # 事件记忆淡一半的天数；fact 不淡
@@ -159,7 +162,7 @@ dsh plugin --profile web add github:CatCatCccC/dsh-wechat-whale-companion
         searchCooldownMs: 8000
       vision:
         enabled: true
-        mode: native            # native=deepseek-flash 直接看图；describe=智谱转写(需 ZHIPU_API_KEY)
+        mode: native            # native=DSH 会话模型看图；describe=旁路智谱(一般不用)
       http:
         port: 3199
         token: ""               # 非空则 /physical?token=...
