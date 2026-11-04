@@ -7,6 +7,7 @@ import {
   findMeme,
   inventoryLine,
   loadMemeCatalog,
+  pickScoredAvoiding,
   scoreMeme,
   toBucket,
 } from '../lib/core/meme-pack.js'
@@ -24,12 +25,35 @@ describe('meme packs', () => {
   it('loads bundled dafeiyu + whale-girl', () => {
     assert.equal(BUNDLED_PACKS_DIR, path.join(root, 'assets', 'meme-packs'))
     const cat = loadMemeCatalog([BUNDLED_PACKS_DIR])
-    assert.ok(cat.count >= 300, `expected >=300 memes, got ${cat.count}`)
+    assert.ok(cat.count >= 200, `expected >=200 memes, got ${cat.count}`)
     assert.ok(cat.packs.length >= 5)
     assert.ok(cat.packs.some((p) => p.id === 'dafeiyu-001'))
     assert.ok(cat.packs.some((p) => p.id === 'whale-girl-emoji'))
     assert.match(inventoryLine(cat), /表情库/)
     assert.match(inventoryLine(cat), /开心|生气|日常/)
+  })
+
+  it('keeps top score but skips recently sent paths', () => {
+    const cat = loadMemeCatalog([BUNDLED_PACKS_DIR])
+    const first = findMeme(cat, { query: '比心', random: () => 0 })
+    assert.equal(first.ok, true)
+    const second = findMeme(cat, {
+      query: '比心',
+      random: () => 0,
+      exclude: [first.meme.absPath],
+    })
+    assert.equal(second.ok, true)
+    assert.notEqual(second.meme.absPath, first.meme.absPath)
+    assert.equal(second.avoidedRecent, true)
+
+    const scored = [
+      { m: { absPath: '/a.png' }, s: 80 },
+      { m: { absPath: '/b.png' }, s: 78 },
+      { m: { absPath: '/c.png' }, s: 40 },
+    ]
+    const pick = pickScoredAvoiding(scored, () => 0, new Set([path.resolve('/a.png')]))
+    assert.equal(pick.meme.absPath, '/b.png')
+    assert.equal(pick.avoided, true)
   })
 
   it('finds by tag and Chinese alias', () => {

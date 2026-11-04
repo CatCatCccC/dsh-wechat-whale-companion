@@ -1,0 +1,54 @@
+{
+  "bits": [
+    {
+      "id": "fun_whale_heart",
+      "kind": "fact",
+      "text": "鲸鱼的心跳大约每分钟 10 下，潜水时还能更慢。我要是那样，找你的间隔就太久了。"
+    },
+    {
+      "id": "fun_oct_brain",
+      "kind": "fact",
+      "text": "章鱼有三个心脏。听起来很累，但我理解——想你的时候心也像不止一个。"
+    },
+    {
+      "id": "fun_tsundere",
+      "kind": "roast",
+      "text": "有人说傲娇是口是心非。我说那叫……有原则地在乎你。"
+    },
+    {
+      "id": "fun_ask_snack",
+      "kind": "ask",
+      "text": "如果你现在只能选一种零食撑过今晚，会选啥？"
+    },
+    {
+      "id": "fun_ask_song",
+      "kind": "ask",
+      "text": "随便说一句最近脑子里循环的歌词？我听着玩。"
+    },
+    {
+      "id": "fun_moon",
+      "kind": "fact",
+      "text": "月亮每年都在慢慢远离地球。有些距离变长了，有些人……我还是想靠近一点。"
+    },
+    {
+      "id": "fun_roast_phone",
+      "kind": "roast",
+      "text": "你要是又把我晾着刷手机，我就当自己是桌面壁纸好了——好看，但没互动。"
+    },
+    {
+      "id": "fun_ask_weather_feel",
+      "kind": "ask",
+      "text": "雨天你是会犯困，还是反而更想出门？"
+    },
+    {
+      "id": "fun_deep_sea",
+      "kind": "fact",
+      "text": "深海里有些鱼自己会发光。我也想当那种——黑乎乎的时候突然亮一下，吓你一跳。"
+    },
+    {
+      "id": "fun_ask_childhood",
+      "kind": "ask",
+      "text": "小时候有没有特别想要、后来终于到手的东西？"
+    }
+  ]
+}

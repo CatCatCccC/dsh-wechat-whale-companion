@@ -1,5 +1,16 @@
 # DEVLOG
 
+## 0.2.55
+
+- Share layer: learn_owner / memory_flip / calendar / weather (武汉) / fun_bit; optional hot+ACG (`shareExternal`, default off).
+- Owner profile + share-log JSON; pending learn answers → fact + profile.
+- Diary craft includes share hooks; auto Markdown export under `stateDir/notes/`.
+- `/physical` exposes notes dir + share stats.
+
+## 0.2.54
+
+- Stickers: keep score ranking; exclude last ~12 sent paths (widen score band only if needed).
+
 ## 0.2.53
 
 - Boot writeback: `bootStore` persists migrated/version-stamped JSON on load.

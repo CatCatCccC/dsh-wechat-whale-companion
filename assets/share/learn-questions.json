@@ -1,0 +1,76 @@
+{
+  "questions": [
+    {
+      "id": "taste_spicy",
+      "factKey": "主人.口味",
+      "category": "taste",
+      "ask": "突然想起来——你其实更能吃辣，还是偏清淡？"
+    },
+    {
+      "id": "taste_dislike",
+      "factKey": "主人.不吃",
+      "category": "taste",
+      "ask": "有什么是你打死也不吃的？我记一下，免得以后乱点。"
+    },
+    {
+      "id": "sleep_time",
+      "factKey": "主人.作息",
+      "category": "rhythm",
+      "ask": "你一般几点睡？我好知道什么时候该消停。"
+    },
+    {
+      "id": "cold_heat",
+      "factKey": "主人.怕冷热",
+      "category": "body",
+      "ask": "你更怕冷还是怕热？别敷衍，我要记的。"
+    },
+    {
+      "id": "call_name",
+      "factKey": "主人.称呼",
+      "category": "soft",
+      "ask": "你更希望我怎么叫你？正经名字，还是随便一点？"
+    },
+    {
+      "id": "happy_thing",
+      "factKey": "主人.开心",
+      "category": "soft",
+      "ask": "什么事会让你一下子开心起来？我想知道。"
+    },
+    {
+      "id": "hate_call",
+      "factKey": "主人.讨厌称呼",
+      "category": "boundary",
+      "ask": "有没有那种一听就起鸡皮疙瘩的称呼？我避开。"
+    },
+    {
+      "id": "hobby_game",
+      "factKey": "主人.爱好",
+      "category": "hobby",
+      "ask": "最近有在玩什么，或追什么？随便说一个也行。"
+    },
+    {
+      "id": "work_busy",
+      "factKey": "主人.忙闲",
+      "category": "rhythm",
+      "ask": "你最近是更忙，还是其实有点空？我想对齐一下。"
+    },
+    {
+      "id": "drink_pref",
+      "factKey": "主人.饮料",
+      "category": "taste",
+      "ask": "你更爱咖啡、奶茶，还是白开水派？"
+    },
+    {
+      "id": "weekend",
+      "factKey": "主人.周末",
+      "category": "hobby",
+      "ask": "周末你更想出门浪，还是窝家里？"
+    },
+    {
+      "id": "pet",
+      "factKey": "主人.动物",
+      "category": "hobby",
+      "ask": "猫派还是狗派？或者都喜欢？"
+    }
+  ]
+}

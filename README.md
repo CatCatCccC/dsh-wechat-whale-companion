@@ -162,12 +162,26 @@ dsh plugin --profile web add github:CatCatCccC/dsh-wechat-whale-companion
       vision:
         enabled: true
         mode: native            # native=DSH 会话模型看图；describe=旁路智谱(一般不用)
+      share:
+        enabled: true
+        learnOwnerDailyMax: 1   # 了解你：题库缺口提问
+        shareDailyMax: 2        # 翻牌/日历/天气/小趣日上限（不含约定）
+        anniversaries: []       # [{ date: "MM-DD", label: "..." }]
+      weather:
+        enabled: true
+        city: 武汉              # 或手写 lat/lon
+      notes:
+        enabled: true           # 自动导出可读 Markdown 到状态目录 notes/
+      shareExternal:
+        hot: false              # 热搜（默认关）
+        media: false            # ACG/音乐（默认关）
       http:
         port: 3199
         token: ""               # 非空则 /physical?token=...
 ```
 
 状态目录：`~/.dsh/plugins/dsh-wechat-whale-companion/`。  
+可读笔记：`…/notes/`（`INDEX.md` / `owner-profile.md` / `diary.md` / `memory.md` / `share-log.md`；由插件生成，勿手改）。  
 内置图库：`assets/meme-packs/`（大肥鱼 + 鲸鱼娘，来自 [dsh-meme-packs](https://github.com/yyh-001/dsh-meme-packs)，见 `ATTRIBUTION.md`）。  
 `wx_sticker` 优先 `tag=` / 中文词命中本地库，再搜网缓存到 `…/stickers-cache/`。
 
