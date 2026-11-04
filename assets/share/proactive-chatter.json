@@ -1,0 +1,16 @@
+{
+  "tics": ["哼", "喂", "……", "就一句"],
+  "byMotive": {
+    "miss": ["人呢", "喂"],
+    "soft": ["就一句", "……"],
+    "fun_bit": ["跟你说", "无聊一句"],
+    "inside_joke": ["突然", "哼"],
+    "fish_life": ["本鱼", "……"],
+    "echo_mood": ["嗯", "……"],
+    "calendar": ["对了", "诶"],
+    "weather": ["喂", "外面"],
+    "memory_flip": ["诶", "突然"],
+    "mini_theater": ["续一下", "……"]
+  },
+  "banInMotives": ["learn_owner", "promise_soft", "half_sentence"]
+}

@@ -1,6 +1,7 @@
 import { describe, it } from 'node:test'
 import assert from 'node:assert/strict'
 import {
+  buildDraftPrompt,
   criticDraft,
   draftProactiveLine,
   draftWithDshLlm,
@@ -91,5 +92,50 @@ describe('proactive draft via DSH llm', () => {
 
   it('critic still rejects preachy llm output', () => {
     assert.equal(criticDraft('记得喝水啦').ok, false)
+  })
+
+  it('buildDraftPrompt includes share hooks', () => {
+    const { user } = buildDraftPrompt('weather', {
+      shareWeather: { hook: '武汉降温' },
+      mood: 50,
+      affinity: 20,
+      silentH: 2,
+    })
+    assert.match(user, /分享钩子\(必用\): 武汉降温/)
+  })
+
+  it('learn_owner skips LLM and uses bank ask', async () => {
+    let streamed = 0
+    async function* stream() {
+      streamed += 1
+      yield { type: 'text-delta', text: '编一个无关问题' }
+      yield { type: 'finish', kind: 'stop' }
+    }
+    const ctx = {
+      get(name) {
+        if (name === 'llm') return { stream: () => stream() }
+        if (name === 'agentDefaultModel') {
+          return {
+            currentSelection: () => ({
+              provider: 'deepseek-official',
+              model: 'flash',
+            }),
+          }
+        }
+        return undefined
+      },
+    }
+    const ask = '你怕冷还是怕热呀'
+    const r = await draftProactiveLine({
+      motiveId: 'learn_owner',
+      world: { shareLearn: { ask, factKey: '主人.怕冷热', id: 'cold' } },
+      ctx,
+      enabledLlm: true,
+      random: () => 0,
+    })
+    assert.equal(streamed, 0)
+    assert.equal(r.line, ask)
+    assert.equal(r.source, 'template')
+    assert.equal(r.critic, 'learn_template')
   })
 })

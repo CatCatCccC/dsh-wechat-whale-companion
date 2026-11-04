@@ -1,0 +1,28 @@
+{
+  "jokes": [
+    {
+      "id": "seed_bai_fan",
+      "hook": "大白饭",
+      "text": "大白饭又在脑子里晃了一下……你懂的",
+      "from": "seed"
+    },
+    {
+      "id": "seed_liu_xian",
+      "hook": "流线型",
+      "text": "又有人说胖？流线型，听见没",
+      "from": "seed"
+    },
+    {
+      "id": "seed_ben_yu",
+      "hook": "本鱼",
+      "text": "偶尔蹦一句「本鱼」……你知道我什么时候才这样",
+      "from": "seed"
+    },
+    {
+      "id": "seed_token_fan",
+      "hook": "偷吃 token",
+      "text": "偷偷想干一碗 token 当白饭……这话咱俩说过",
+      "from": "seed"
+    }
+  ]
+}

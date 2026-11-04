@@ -127,6 +127,46 @@ describe('proactive social engine', () => {
     assert.ok(plan.line)
   })
 
+  it('forces learn_owner even if chance dice would fail', () => {
+    const noon = Date.parse('2026-10-28T04:30:00Z')
+    const world = buildWorldState({
+      now: noon,
+      hour: 12,
+      lastOwnerAt: noon - 2 * 3600 * 1000,
+      mood: 60,
+      energy: 70,
+      affinity: 18,
+      lastOwnerText: '在忙',
+    })
+    world.silentH = 2
+    world.shareLearn = {
+      ask: '你怕冷还是怕热呀',
+      factKey: '主人.怕冷热',
+      id: 'cold_heat',
+    }
+    const plan = planProactiveTick({
+      now: noon,
+      asleep: false,
+      energy: 70,
+      mood: 60,
+      affinity: 18,
+      lastProactiveAt: noon - 40 * 60 * 1000,
+      lastOwnerAt: noon - 2 * 3600 * 1000,
+      chance: 0.01,
+      cooldownMin: 20,
+      minOwnerGapMin: 10,
+      stickerChance: 0,
+      hasSendText: true,
+      hasOwner: true,
+      timeZone: 'Asia/Shanghai',
+      world,
+      random: () => 0.99,
+    })
+    assert.equal(plan.fire, true)
+    assert.equal(plan.motive, 'learn_owner')
+    assert.equal(plan.forced, true)
+  })
+
   it('forces miss after long silence even if chance dice would fail', () => {
     const noon = Date.parse('2026-10-28T04:30:00Z')
     const world = buildWorldState({

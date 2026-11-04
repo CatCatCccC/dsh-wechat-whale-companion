@@ -1,5 +1,24 @@
 # DEVLOG
 
+## 0.2.58
+
+- Relationship milestones (`milestones.json`): first 晚安 / 和好 unlock; calendar `kind:milestone` beats weekend.
+- Proactive-only口癖 via `proactive-chatter.json` (draft path; skip learn/promise/half).
+- Parallel `mini_theater` serial (daily p≈0.08, WEAK, hard-suppress vs learn/promise).
+
+## 0.2.57
+
+- Relation soft layer: `inside_joke` / `echo_mood` / `fish_life`; busyUntil gate (suppress miss/soft); blank forms (`sticker_only` / half-sentence); dayPart+Monday tone drift.
+- Diary can note「今天忍住没烦你」on quiet/busy days without share hooks.
+- Config `modules.relation.*` defaults on; assets `inside-jokes.json` + `fish-life.json`.
+
+## 0.2.56
+
+- Learn loop harden: `learn_owner` drafts from bank ask only (no LLM invent); draft prompt includes share hooks for other motives.
+- Pending learn survives day roll; TTL 24h; capture window 90min; topic-change skip.
+- Short learn answers no longer dismiss-punish motive; weekend calendar needs `silentH≥1`; weather fail caches 20min; `learn_owner` forces past chance dice.
+- Prompt injects「待主人回答」when pending.
+
 ## 0.2.55
 
 - Share layer: learn_owner / memory_flip / calendar / weather (武汉) / fun_bit; optional hot+ACG (`shareExternal`, default off).

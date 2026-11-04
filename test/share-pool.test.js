@@ -2,7 +2,12 @@ import { describe, it } from 'node:test'
 import assert from 'node:assert/strict'
 import { pickCalendarHook, monthDayInZone } from '../lib/core/share-calendar.js'
 import { filledFactKeys, upsertTrait, normalizeOwnerProfile } from '../lib/core/owner-profile.js'
-import { ensureShareLog, recordShareEntry } from '../lib/core/share-log.js'
+import {
+  ensureShareLog,
+  prunePending,
+  recordShareEntry,
+  PENDING_TTL_MS,
+} from '../lib/core/share-log.js'
 import {
   pickLearnQuestion,
   pickFunBit,
@@ -13,6 +18,8 @@ import { filterHotTitle } from '../lib/core/share-external.js'
 import { exportAllNotes } from '../lib/core/notes-export.js'
 import { craftDailyEntry } from '../lib/core/auto-diary.js'
 import { scoreMotives } from '../lib/core/proactive-motive.js'
+import { applyShare } from '../lib/modules/share.js'
+import { StateStore } from '../lib/core/state.js'
 import fs from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
@@ -71,6 +78,129 @@ describe('share layer', () => {
       anniversaries: [{ monthDay: md, label: '测试日' }],
     })
     assert.equal(hit?.label, '测试日')
+    assert.equal(hit?.kind, 'anniversary')
+  })
+
+  it('keeps pending across day roll and prunes after 24h', () => {
+    const now = Date.parse('2099-01-02T10:00:00+08:00')
+    const pending = { factKey: '主人.怕冷热', ask: '你怕冷吗', at: now - 60 * 60 * 1000 }
+    const rolled = ensureShareLog(
+      { day: '2099-01-01', learnCount: 1, shareCount: 1, usedIds: ['x'], entries: [{}], pending },
+      { day: '2099-01-02', now },
+    )
+    assert.equal(rolled.day, '2099-01-02')
+    assert.equal(rolled.learnCount, 0)
+    assert.equal(rolled.shareCount, 0)
+    assert.deepEqual(rolled.usedIds, [])
+    assert.equal(rolled.pending?.factKey, '主人.怕冷热')
+
+    const stale = prunePending(
+      { ...rolled, pending: { ...pending, at: now - PENDING_TTL_MS - 1000 } },
+      now,
+    )
+    assert.equal(stale.pending, null)
+  })
+
+  it('weekend calendar needs silence; anniversary does not', () => {
+    // 2026-11-06 is Friday
+    const fri = Date.parse('2026-11-06T12:00:00+08:00')
+    const empty = ensureShareLog(null, { day: '2026-11-06' })
+    const quiet = buildShareCandidates({
+      now: fri,
+      silentH: 0.2,
+      timeZone: 'Asia/Shanghai',
+      shareLog: empty,
+      shareCfg: { learnOwnerDailyMax: 1, shareDailyMax: 2 },
+      profile: normalizeOwnerProfile({}),
+      memories: [],
+      diary: { entries: [] },
+      journalTurns: [],
+      random: () => 0,
+    })
+    assert.equal(quiet.calendar, null)
+
+    const loud = buildShareCandidates({
+      now: fri,
+      silentH: 1.2,
+      timeZone: 'Asia/Shanghai',
+      shareLog: empty,
+      shareCfg: { learnOwnerDailyMax: 1, shareDailyMax: 2 },
+      profile: normalizeOwnerProfile({}),
+      memories: [],
+      diary: { entries: [] },
+      journalTurns: [],
+      random: () => 0,
+    })
+    assert.equal(loud.calendar?.kind, 'weekend')
+
+    const md = monthDayInZone(fri)
+    const anniv = buildShareCandidates({
+      now: fri,
+      silentH: 0,
+      timeZone: 'Asia/Shanghai',
+      shareLog: empty,
+      shareCfg: {
+        learnOwnerDailyMax: 1,
+        shareDailyMax: 2,
+        anniversaries: [{ monthDay: md, label: '测试日' }],
+      },
+      profile: normalizeOwnerProfile({}),
+      memories: [],
+      diary: { entries: [] },
+      journalTurns: [],
+      random: () => 0,
+    })
+    assert.equal(anniv.calendar?.kind, 'anniversary')
+  })
+
+  it('captureOwnerReply respects window and topic change', () => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'whale-share-'))
+    const runtime = {
+      store: new StateStore(dir),
+      config: {
+        modules: {
+          share: { enabled: true },
+          notes: { enabled: false },
+          weather: { enabled: false },
+          shareExternal: {},
+          persona: { timeZone: 'Asia/Shanghai' },
+        },
+      },
+      stats: {},
+      log: { warn() {} },
+    }
+    const dispose = applyShare({}, runtime)
+    const now = Date.now()
+    runtime.share.getShareLog().pending = {
+      factKey: '主人.怕冷热',
+      ask: '你怕冷还是怕热',
+      at: now - 10 * 60 * 1000,
+    }
+    const ok = runtime.share.captureOwnerReply('怕冷', { now })
+    assert.equal(ok.ok, true)
+    assert.equal(ok.text, '怕冷')
+    assert.equal(runtime.share.getProfile().traits['主人.怕冷热'], '怕冷')
+
+    runtime.share.getShareLog().pending = {
+      factKey: '主人.口味',
+      ask: '口味',
+      at: now - 10 * 60 * 1000,
+    }
+    const topic = runtime.share.captureOwnerReply('帮我写个脚本部署一下报错', { now })
+    assert.equal(topic.ok, false)
+    assert.equal(topic.skipped, 'topic_change')
+    assert.ok(runtime.share.getShareLog().pending)
+
+    runtime.share.getShareLog().pending = {
+      factKey: '主人.口味',
+      ask: '口味',
+      at: now - 2 * 60 * 60 * 1000,
+    }
+    const late = runtime.share.captureOwnerReply('偏辣', { now })
+    assert.equal(late.ok, false)
+    assert.equal(late.skipped, 'window')
+    assert.match(runtime.share.profileBlock(), /待主人回答/)
+    dispose()
   })
 
   it('fun bits load from assets', () => {

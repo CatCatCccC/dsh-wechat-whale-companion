@@ -1,6 +1,6 @@
 {
   "name": "dsh-wechat-whale-companion",
-  "version": "0.2.55",
+  "version": "0.2.58",
   "description": "DSH WeChat DM companion: social proactive engine, diary, sticker/memory/promise tools, native vision, meme packs",
   "type": "module",
   "main": "lib/index.js",
