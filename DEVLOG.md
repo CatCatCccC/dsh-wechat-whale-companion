@@ -1,8 +1,19 @@
 # DEVLOG
 
-## 0.2.47
+## 0.2.53
+
+- Boot writeback: `bootStore` persists migrated/version-stamped JSON on load.
+- Drop legacy clock INTENT pools / `proactiveSocialEngine:false` escape — social motive only.
+- Speak-only outbound for proactive + promise (no `sendText` / rhythm bypass).
+- Add `deploy.ps1` (test → pack → scp → `dsh plugin add file:…` → restart).
+
+## 0.2.52
 
 - Engineering: extract observe turn/speak pipeline; runtime port assert; split proactive-engine from persona; stores registry + version; formalize || sendReply patch peer version / AUTHORITY.
+
+## 0.2.47
+
+- Engineering note (shipped as 0.2.52): extract observe / ports / proactive-engine / stores / || patch.
 - Slim: drop lengthVoice/styleHint/shortBias wiring, isTrivialOwner, searchBaiduImageUrls, sleep alias, stickerPath, fake ownerGate.enabled, unused visionSkipped; unify dayKey + tooSimilar.
 - Cleanup: remove dead `blankAssistantTextBlocks` / session prepend takeover; `||` only via `sendReply` patch.
 - Bubble split: patch dsh-wechat `WeChatDSHBridge.sendReply` so silent-flush of `a||b` becomes two paced WeChat bubbles.

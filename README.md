@@ -144,7 +144,6 @@ dsh plugin --profile web add github:CatCatCccC/dsh-wechat-whale-companion
         proactiveCooldownMin: 22
         proactiveMinOwnerGapMin: 12    # 主人刚聊过不主动
         proactiveStickerChance: 0.32
-        proactiveSocialEngine: true    # false=旧钟点话术池
         proactiveLlmDraft: true        # 用 DSH ctx.llm（同聊天模型）；失败回落模板
         proactiveDailyMax: 3           # 日主动上限（约定软垫可突破）
       memory:

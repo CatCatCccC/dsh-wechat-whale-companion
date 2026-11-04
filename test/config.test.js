@@ -16,7 +16,7 @@ describe('config', () => {
     assert.equal(c.modules.outbound.deliverAssistant, false)
     assert.equal(c.modules.persona.proactiveChance, 0.28)
     assert.equal(c.modules.persona.proactiveStickerChance, 0.32)
-    assert.equal(c.modules.persona.proactiveSocialEngine, true)
+    assert.equal(c.modules.persona.proactiveMinMotiveScore, 0.48)
     assert.equal(c.modules.memory.enabled, true)
     assert.equal(c.modules.memory.halfLifeDays, 30)
     assert.equal(c.modules.stamp, undefined)

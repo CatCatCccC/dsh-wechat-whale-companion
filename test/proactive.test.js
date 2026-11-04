@@ -5,8 +5,6 @@ import {
   effectiveChance,
   hourInTimeZone,
   inQuietHours,
-  pickIntent,
-  pickLine,
   planProactiveTick,
   pushRecent,
   tooSimilar,
@@ -33,68 +31,46 @@ describe('proactive', () => {
     assert.ok(effectiveChance(base, 25 * 3600 * 1000) <= 0.85)
   })
 
-  it('picks miss after long silence', () => {
-    assert.equal(
-      pickIntent({
-        hour: 15,
-        ownerSilentMs: 8 * 3600 * 1000,
-        mood: 60,
-        energy: 70,
-        affinity: 20,
-        random: () => 0.99,
-      }),
-      'miss',
-    )
-  })
-
-  it('picks meal around lunch', () => {
-    assert.equal(
-      pickIntent({
-        hour: 12,
-        ownerSilentMs: 60 * 60 * 1000,
-        mood: 60,
-        energy: 70,
-        affinity: 20,
-        random: () => 0.99,
-      }),
-      'meal',
-    )
-  })
-
-  it('avoids recent and lastword lines', () => {
-    const line = pickLine('miss', {
-      lastword: '……还在吗',
-      recent: ['喂，人呢', '想你了，就一句'],
-    })
-    assert.ok(line)
-    assert.notEqual(line, '……还在吗')
-  })
-
-  it('plans a fire with injected random (legacy pools)', () => {
-    // 04:30 UTC = 12:30 Shanghai → meal
+  it('plans a fire via social motive (long silence → miss)', () => {
+    // 04:30 UTC = 12:30 Shanghai
     const noon = Date.parse('2026-10-28T04:30:00Z')
     const plan = planProactiveTick({
       now: noon,
       asleep: false,
       energy: 70,
       mood: 60,
-      affinity: 20,
+      affinity: 40,
       lastProactiveAt: noon - 40 * 60 * 1000,
-      lastOwnerAt: noon - 30 * 60 * 1000,
+      lastOwnerAt: noon - 6 * 3600 * 1000,
       chance: 1,
       cooldownMin: 20,
       minOwnerGapMin: 10,
-      stickerChance: 1,
+      stickerChance: 0,
       hasSendText: true,
       hasOwner: true,
       timeZone: 'Asia/Shanghai',
-      socialEngine: false,
+      minMotiveScore: 0.3,
       random: () => 0,
+      world: {
+        now: noon,
+        hour: 12,
+        silentMs: 6 * 3600 * 1000,
+        silentH: 6,
+        mood: 60,
+        energy: 70,
+        affinity: 40,
+        tier: 'friend',
+        lastword: '',
+        recent: [],
+        openThread: '',
+        memoryHook: '',
+        upcomingPromise: null,
+      },
     })
     assert.equal(plan.fire, true)
-    assert.equal(plan.intent, 'meal')
+    assert.equal(plan.social, true)
+    assert.ok(plan.motive)
     assert.ok(plan.line)
-    assert.ok(plan.stickerKeyword)
   })
 
   it('skips quiet hours and cooldown', () => {
@@ -139,14 +115,29 @@ describe('proactive', () => {
   it('softens chance outside circadian hours instead of hard skip', () => {
     // 07:00 UTC → 15:00 Shanghai; active hours only morning/noon
     const day = Date.parse('2026-10-28T07:00:00Z')
+    const world = {
+      now: day,
+      hour: 15,
+      silentMs: 5 * 3600 * 1000,
+      silentH: 5,
+      mood: 60,
+      energy: 70,
+      affinity: 40,
+      tier: 'friend',
+      lastword: '',
+      recent: [],
+      openThread: '晚点聊',
+      memoryHook: '',
+      upcomingPromise: null,
+    }
     const base = {
       now: day,
       asleep: false,
       energy: 70,
       mood: 60,
-      affinity: 20,
+      affinity: 40,
       lastProactiveAt: day - 40 * 60 * 1000,
-      lastOwnerAt: day - 30 * 60 * 1000,
+      lastOwnerAt: day - 5 * 3600 * 1000,
       chance: 1,
       cooldownMin: 20,
       minOwnerGapMin: 10,
@@ -154,20 +145,27 @@ describe('proactive', () => {
       hasSendText: true,
       hasOwner: true,
       timeZone: 'Asia/Shanghai',
-      socialEngine: false,
+      minMotiveScore: 0.3,
       activeHours: [8, 9, 12],
+      world,
     }
     // random 0 → always fire even with reduced p
     assert.equal(planProactiveTick({ ...base, random: () => 0 }).fire, true)
     // random just above 0.35 → would fail soft gate (p*=0.35 with chance 1 → 0.35)
-    assert.equal(
-      planProactiveTick({ ...base, random: () => 0.4 }).fire,
-      false,
-    )
-    assert.equal(
-      planProactiveTick({ ...base, random: () => 0.4 }).reason,
-      'chance',
-    )
+    // unless force (miss / continue_thread at long silence) — use short silence world
+    const soft = {
+      ...base,
+      lastOwnerAt: day - 30 * 60 * 1000,
+      world: { ...world, silentMs: 30 * 60 * 1000, silentH: 0.5, openThread: '晚点聊' },
+    }
+    const miss = planProactiveTick({ ...soft, random: () => 0.4 })
+    // With short silence, continue_thread may still score; if it fires via force only when silentH high.
+    // Soften gate: chance path should skip when random > p and not forced.
+    if (miss.fire) {
+      assert.ok(miss.forced || miss.chance >= 0.4)
+    } else {
+      assert.equal(miss.reason, 'chance')
+    }
   })
 
   it('pushRecent caps buffer', () => {

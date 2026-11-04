@@ -119,7 +119,6 @@ describe('proactive social engine', () => {
       hasSendText: true,
       hasOwner: true,
       timeZone: 'Asia/Shanghai',
-      socialEngine: true,
       world,
       random: () => 0,
     })
@@ -154,7 +153,6 @@ describe('proactive social engine', () => {
       hasSendText: true,
       hasOwner: true,
       timeZone: 'Asia/Shanghai',
-      socialEngine: true,
       forceMissSilentH: 4,
       world,
       // would fail chance if rolled first
