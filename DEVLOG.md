@@ -2,8 +2,11 @@
 
 ## 0.2.47
 
-- Bubble split: patch dsh-wechat `WeChatDSHBridge.sendReply` so silent-flush of `a||b` becomes two paced WeChat bubbles (blanking frozen session events never reached the buffer). Also harden blank + `||` / wx-next / [[next]] in `splitBubbles`.
-- Bubble split (0.2.47 attempt): honor persona `||` via blank+speak takeover — insufficient because silent mode copies the string before blank can help.
+- Engineering: extract observe turn/speak pipeline; runtime port assert; split proactive-engine from persona; stores registry + version; formalize || sendReply patch peer version / AUTHORITY.
+- Slim: drop lengthVoice/styleHint/shortBias wiring, isTrivialOwner, searchBaiduImageUrls, sleep alias, stickerPath, fake ownerGate.enabled, unused visionSkipped; unify dayKey + tooSimilar.
+- Cleanup: remove dead `blankAssistantTextBlocks` / session prepend takeover; `||` only via `sendReply` patch.
+- Bubble split: patch dsh-wechat `WeChatDSHBridge.sendReply` so silent-flush of `a||b` becomes two paced WeChat bubbles.
+- Bubble split (0.2.47 attempt): blank+speak takeover — dropped; silent mode copies the string before blank can help.
 
 ## 0.2.46
 

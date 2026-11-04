@@ -5,7 +5,6 @@ import {
   energyWord,
   affinityWord,
   formatMoodLine,
-  lengthVoice,
   moodMode,
   FEELING_BY_KIND,
 } from '../lib/modules/mood-words.js'
@@ -25,12 +24,6 @@ describe('mood words', () => {
     assert.equal(moodMode(55), 'naughty')
     assert.equal(moodMode(54), 'live')
     assert.equal(moodMode(20), 'live')
-  })
-
-  it('lengthVoice bands (kept for back-compat)', () => {
-    assert.equal(lengthVoice(0.7), '偏短句')
-    assert.equal(lengthVoice(0.3), '可稍长')
-    assert.equal(lengthVoice(0.5), '中等句长')
   })
 
   it('formats low mood as 活人版', () => {

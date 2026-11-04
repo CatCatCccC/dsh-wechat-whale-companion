@@ -2,7 +2,7 @@
 
 DeepSeek Harness（DSH）**微信单人私聊**陪伴插件：挂在 [`dsh-wechat`](https://github.com/pan17/dsh-wechat) 之上，注入鲸鱼娘短句人设，并接管日常出站（`[[silent]]` / `---wx-next---` 分气泡）、情绪、主动找主人与 `wx_*` 工具。
 
-> **一行不改** `node_modules/dsh-wechat`。入站/日常出站都由 `dsh-wechat` 推送；本插件做人设、情绪、主动找你与 `wx_*` 工具。  
+> **不改磁盘上的** `node_modules/dsh-wechat`；入站/日常出站仍由它推送。本插件做人设、情绪、主动找你与 `wx_*`，并在运行时 patch `sendReply`，让人设里的 `||` / `---wx-next---` 拆成多条微信气泡（见 `/physical` → `outbound.bubbleSplitPatch`）。  
 > 注意：`/silent` 只表示「少发过程、只发最终回复」，**仍会推一条**。不要再开 `deliverAssistant`，否则同一句会发两次。
 
 ## 依赖

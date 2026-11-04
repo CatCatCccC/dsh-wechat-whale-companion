@@ -101,7 +101,6 @@ describe('host integration', () => {
       stats: {},
       persona: {
         snapshot: () => ({ mood: 60 }),
-        styleHint: () => '',
         moodLine: () => '【此刻】心情还行',
       },
       wechatSessions: { matches: () => true },

@@ -257,4 +257,118 @@ describe('dsh-wechat session observation', () => {
 
     handle.dispose()
   })
+
+  it('owner turns advance tool-force; fingerprint dedupes assistant', async () => {
+    const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), 'whale-force-'))
+    const wechatDir = fs.mkdtempSync(path.join(os.tmpdir(), 'whale-wechat-'))
+    fs.writeFileSync(
+      path.join(wechatDir, 'state.json'),
+      JSON.stringify({
+        users: { wx_owner: { userId: 'wx_owner', sessionId: 'session-wechat' } },
+      }),
+      'utf8',
+    )
+    const { ctx, listeners } = makeHost()
+    const handle = apply(ctx, {
+      stateDir,
+      wechatStorageDir: wechatDir,
+      modules: {
+        http: { enabled: false },
+        outbound: { deliverAssistant: false, ensureWechatSilent: false },
+        toolForce: { enabled: true, stickerEveryN: 2 },
+      },
+    })
+    const runtime = ctx.whaleCompanion.runtime
+    const listener = listeners.get('session/event')?.[0]
+    listener({ id: 'session-wechat' }, {
+      type: 'user/message',
+      data: {
+        source: { kind: 'user' },
+        message: { content: [{ type: 'text', text: '今天加班好累' }] },
+      },
+    })
+    assert.equal(runtime.toolForce.pendingSticker(), false)
+    listener({ id: 'session-wechat' }, {
+      type: 'user/message',
+      data: {
+        source: { kind: 'user' },
+        message: { content: [{ type: 'text', text: '还在写代码' }] },
+      },
+    })
+    assert.equal(runtime.toolForce.pendingSticker(), true)
+
+    listener({ id: 'session-wechat' }, {
+      type: 'assistant/message',
+      data: { message: { content: [{ type: 'text', text: '行吧' }] } },
+    })
+    const before = runtime.stats.observeDeduped || 0
+    runtime._spokeFingerprint = { text: '行吧', at: Date.now() }
+    listener({ id: 'session-wechat' }, {
+      type: 'assistant/message',
+      data: { message: { content: [{ type: 'text', text: '行吧' }] } },
+    })
+    assert.ok((runtime.stats.observeDeduped || 0) > before)
+    handle.dispose()
+  })
+
+  it('alarm owner text triggers promise auto speak after assistant reply', async () => {
+    const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), 'whale-alarm-'))
+    const wechatDir = fs.mkdtempSync(path.join(os.tmpdir(), 'whale-wechat-'))
+    fs.writeFileSync(
+      path.join(wechatDir, 'state.json'),
+      JSON.stringify({
+        users: { wx_owner: { userId: 'wx_owner', sessionId: 'session-wechat' } },
+      }),
+      'utf8',
+    )
+    const sent = []
+    const tools = {
+      get(name) {
+        if (name !== 'send_wechat') return undefined
+        return {
+          async execute(args) {
+            sent.push(args.text)
+            return { ok: true }
+          },
+        }
+      },
+    }
+    const { ctx, listeners } = makeHost(tools)
+    const handle = apply(ctx, {
+      stateDir,
+      wechatStorageDir: wechatDir,
+      modules: {
+        http: { enabled: false },
+        outbound: { deliverAssistant: false, ensureWechatSilent: false },
+        rhythm: { bubbleDelayMs: '0,0' },
+        toolForce: { enabled: false },
+      },
+    })
+    const runtime = ctx.whaleCompanion.runtime
+    let autoCalls = 0
+    runtime.promise = {
+      due: () => [],
+      maybeAutoFromOwner(text) {
+        autoCalls += 1
+        assert.match(String(text), /闹钟|叫我|提醒/)
+        return { ok: true, item: { id: '1' }, label: '明天早上' }
+      },
+    }
+    const listener = listeners.get('session/event')?.[0]
+    listener({ id: 'session-wechat' }, {
+      type: 'user/message',
+      data: {
+        source: { kind: 'user' },
+        message: { content: [{ type: 'text', text: '明天早上7点闹钟叫我' }] },
+      },
+    })
+    listener({ id: 'session-wechat' }, {
+      type: 'assistant/message',
+      data: { message: { content: [{ type: 'text', text: '好' }] } },
+    })
+    await new Promise((r) => setTimeout(r, 80))
+    assert.equal(autoCalls, 1)
+    assert.ok(sent.some((t) => /到点喊你/.test(t)))
+    handle.dispose()
+  })
 })
