@@ -2,7 +2,8 @@
 
 ## 0.2.47
 
-- Bubble split: honor persona `||` (and wx-next / [[next]]); prepend `session/event` to blank assistant text before dsh-wechat silent flush, then `speak()` paced multi-bubble — fixes raw `||` leaking as one WeChat message.
+- Bubble split: patch dsh-wechat `WeChatDSHBridge.sendReply` so silent-flush of `a||b` becomes two paced WeChat bubbles (blanking frozen session events never reached the buffer). Also harden blank + `||` / wx-next / [[next]] in `splitBubbles`.
+- Bubble split (0.2.47 attempt): honor persona `||` via blank+speak takeover — insufficient because silent mode copies the string before blank can help.
 
 ## 0.2.46
 
