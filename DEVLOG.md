@@ -1,5 +1,13 @@
 # DEVLOG
 
+## 0.2.47
+
+- Bubble split: honor persona `||` (and wx-next / [[next]]); prepend `session/event` to blank assistant text before dsh-wechat silent flush, then `speak()` paced multi-bubble — fixes raw `||` leaking as one WeChat message.
+
+## 0.2.46
+
+- Promise due ping: stop quoting raw agreement text（「11月4日…喊主人起床」）；wake → `喂，到点了` + `快起来。`，其它约定只说「到点了哦」。
+
 ## 0.2.45
 
 - Proactive persist: flush mood/agenda on successful ping (no debounce stomp); don't rewrite agenda every tick; log `proactive sent`.

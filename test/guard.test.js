@@ -1,6 +1,11 @@
 import { describe, it } from 'node:test'
 import assert from 'node:assert/strict'
-import { cleanOutbound, splitBubbles } from '../lib/modules/guard.js'
+import {
+  blankAssistantTextBlocks,
+  cleanOutbound,
+  hasSplitMarkers,
+  splitBubbles,
+} from '../lib/modules/guard.js'
 
 describe('guard', () => {
   it('drops [[silent]]', () => {
@@ -18,6 +23,18 @@ describe('guard', () => {
   it('splits wx-next bubbles', () => {
     const parts = splitBubbles('先这样\n---wx-next---\n你呢')
     assert.deepEqual(parts, ['先这样', '你呢'])
+  })
+
+  it('splits || persona dual bubbles', () => {
+    assert.equal(hasSplitMarkers('？||干嘛'), true)
+    assert.equal(hasSplitMarkers('单句没有分隔'), false)
+    assert.deepEqual(splitBubbles('？||干嘛 突然打问号'), ['？', '干嘛 突然打问号'])
+    assert.deepEqual(splitBubbles('喂，到点了||快起来。'), ['喂，到点了', '快起来。'])
+    const event = {
+      data: { message: { content: [{ type: 'text', text: 'a||b' }] } },
+    }
+    assert.equal(blankAssistantTextBlocks(event), true)
+    assert.equal(event.data.message.content[0].text, '')
   })
 
   it('caps bubble count', () => {

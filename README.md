@@ -117,7 +117,7 @@ dsh plugin --profile web add github:CatCatCccC/dsh-wechat-whale-companion
 | prompt | SOUL/STYLE + 精简 RULES；【此刻】含档位/心情口吻/时段；默认只注入微信绑定会话 |
 | outbound | 默认不接管日常出站（防双发）；主动发言仍用 speak |
 | persona | 心情/精力/亲和 + **社交动机主动找你**（有由头才发、日限额、LLM/模板起草、按回复学政策） |
-| guard / rhythm | `[[silent]]`、分气泡延迟 |
+| guard / rhythm | `[[silent]]`；`||` / `---wx-next---` 分气泡并分开发送 |
 | diary / promise | `wx_diary` / `wx_promise` |
 | memory | **鱼的记忆**（淡忘半衰期、长期事实、配额、`wx_memory`；对标 [dsh-fish-memory](https://github.com/Yuuyuko-uu/dsh-fish-memory) 思路） |
 | media | `wx_sticker`：优先 **dsh-meme 风格本地图库**（大肥鱼/鲸鱼娘，`tag`/中文词）→ 旧 stickers → 搜狗缓存 |
