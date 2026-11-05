@@ -1,5 +1,58 @@
 # DEVLOG
 
+## 0.2.70
+
+- Tiered draft: material motives LLM-only (+1 retry, skip on fail); miss/soft soft-neutral fallback; learn bank ask; half-sentence pool; alarm hardFallback must fire; diary LLM retry without burning the day (`pendingDay` tick retry).
+
+## 0.2.69
+
+- Global no-template pass: drop `prefixChatter` on LLM bubbles; promise due + alarm ack drafted by LLM; diary no longer falls back to `craftDailyEntry` (LLM fail → skip write). Dead `templateLine`/`fallbackLine` remain unused by runtime.
+
+## 0.2.68
+
+- Proactive lines: LLM only — no template/emergency fallback; draft fail → skip send. `learn_owner` / half-sentence also drafted by model; sticker-only no longer falls back to「喂」.
+
+## 0.2.67
+
+- Same material→LLM path for hot/media/weather/calendar/fun/fish/theater/continue/promise; drop stiff prefixes (`看到热搜：` / `ACG：`); templates only as fail fallback. `learn_owner` / half-sentence still template on purpose.
+
+## 0.2.66
+
+- Recall motives (`inside_joke` / `memory_flip`): feed owner quote as LLM material (AI writes the bubble); no template-style「突然想起：」; templates only if LLM fails.
+
+## 0.2.65
+
+- Proactive recall: drop stiff `突然想起：` / `忽然想到：` colon formulas; keep recalling owner lines in natural phrasing; ban that pattern in LLM draft.
+
+## 0.2.64
+
+- Diary trigger: write after owner 晚安 / 睡了 (not fixed 22:00); sleep clock from that message; timer only optional `writeAtFallback`.
+
+## 0.2.63
+
+- Diary: LLM reads full-day transcript and writes a first-person entry (template fallback); always 主人; detect owner sleep clock (晚安/睡了) and record e.g.「主人大约 23:41 睡了」.
+
+## 0.2.62
+
+- Diary craft: always address 主人 (no 他); keep more owner/whale lines; drop tool/test noise (`||` etc.); slightly longer comprehensive entry.
+
+## 0.2.61
+
+- Hot: drop `hot-fallback.json`; Weibo-only. Fix fetch UA/Referer (bare UA was 403; mobile UA works on dsh-harness).
+
+## 0.2.60
+
+- Drop proactive daily cap: `proactiveDailyMax: 0` = unlimited (`agendaAllows` when `maxPings<=0`).
+- Hot: own daily slot (not blocked by `shareDailyMax`); Weibo live; slightly higher score; silence ≥0.75h.
+
+## 0.2.59
+
+- Raise weak-share motive scores/weights (`fun_bit` / `fish_life` / `mini_theater` / `share_hot|media`) past `minMotiveScore` 0.48.
+- `hasShare` miss-depress only for strong hooks (learn/flip/calendar/weather/inside_joke).
+- `shareExternal.hot` default on; Weibo empty → `assets/share/hot-fallback.json`.
+- `prefixChatter` also applied after successful LLM draft (not template-only).
+- Learn pending TTL = capture window (90m); prompt/prune/capture aligned.
+
 ## 0.2.58
 
 - Relationship milestones (`milestones.json`): first 晚安 / 和好 unlock; calendar `kind:milestone` beats weekend.

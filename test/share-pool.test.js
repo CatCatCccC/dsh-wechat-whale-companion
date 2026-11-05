@@ -81,7 +81,7 @@ describe('share layer', () => {
     assert.equal(hit?.kind, 'anniversary')
   })
 
-  it('keeps pending across day roll and prunes after 24h', () => {
+  it('keeps pending across day roll and prunes after capture window (90m)', () => {
     const now = Date.parse('2099-01-02T10:00:00+08:00')
     const pending = { factKey: '主人.怕冷热', ask: '你怕冷吗', at: now - 60 * 60 * 1000 }
     const rolled = ensureShareLog(
@@ -99,6 +99,7 @@ describe('share layer', () => {
       now,
     )
     assert.equal(stale.pending, null)
+    assert.equal(PENDING_TTL_MS, 90 * 60 * 1000)
   })
 
   it('weekend calendar needs silence; anniversary does not', () => {
@@ -186,11 +187,13 @@ describe('share layer', () => {
       ask: '口味',
       at: now - 10 * 60 * 1000,
     }
+    assert.match(runtime.share.profileBlock(), /待主人回答/)
     const topic = runtime.share.captureOwnerReply('帮我写个脚本部署一下报错', { now })
     assert.equal(topic.ok, false)
     assert.equal(topic.skipped, 'topic_change')
     assert.ok(runtime.share.getShareLog().pending)
 
+    // Past 90m TTL: prune clears pending (prompt + capture aligned)
     runtime.share.getShareLog().pending = {
       factKey: '主人.口味',
       ask: '口味',
@@ -198,8 +201,9 @@ describe('share layer', () => {
     }
     const late = runtime.share.captureOwnerReply('偏辣', { now })
     assert.equal(late.ok, false)
-    assert.equal(late.skipped, 'window')
-    assert.match(runtime.share.profileBlock(), /待主人回答/)
+    assert.equal(late.skipped, 'no-pending')
+    assert.equal(runtime.share.getShareLog().pending, null)
+    assert.doesNotMatch(runtime.share.profileBlock() || '', /待主人回答/)
     dispose()
   })
 

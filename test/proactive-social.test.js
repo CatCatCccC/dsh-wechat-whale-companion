@@ -66,6 +66,15 @@ describe('proactive social engine', () => {
     assert.equal(agendaAllows(agenda, 'promise_soft'), true)
   })
 
+  it('agenda dailyMax 0 is unlimited', () => {
+    let agenda = ensureAgenda(null, { day: '2099-01-01', dailyMax: 0 })
+    assert.equal(agenda.maxPings, 0)
+    agenda = bumpAgendaUsed(agenda)
+    agenda = bumpAgendaUsed(agenda)
+    agenda = bumpAgendaUsed(agenda)
+    assert.equal(agendaAllows(agenda, 'miss'), true)
+  })
+
   it('policy learns from annoy feedback', () => {
     let p = normalizePolicy(null)
     const before = p.weights.miss
@@ -124,7 +133,8 @@ describe('proactive social engine', () => {
     })
     assert.equal(plan.fire, true)
     assert.equal(plan.motive, 'miss')
-    assert.ok(plan.line)
+    assert.equal(plan.lineSource, 'pending_llm')
+    assert.equal(plan.line, '')
   })
 
   it('forces learn_owner even if chance dice would fail', () => {

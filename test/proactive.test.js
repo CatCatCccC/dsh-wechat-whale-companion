@@ -70,7 +70,7 @@ describe('proactive', () => {
     assert.equal(plan.fire, true)
     assert.equal(plan.social, true)
     assert.ok(plan.motive)
-    assert.ok(plan.line)
+    assert.equal(plan.lineSource, 'pending_llm')
   })
 
   it('skips quiet hours and cooldown', () => {

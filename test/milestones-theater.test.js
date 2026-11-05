@@ -133,5 +133,46 @@ describe('milestones chatter theater', () => {
     const theater = ranked.find((m) => m.id === 'mini_theater')
     assert.ok(learn && theater)
     assert.ok(learn.score > theater.score)
+    assert.ok(theater.score >= 0.48)
+  })
+
+  it('weak shares clear minMotiveScore; weak-only does not crush miss', () => {
+    const weak = scoreMotives(
+      {
+        silentH: 2,
+        hour: 15,
+        mood: 55,
+        energy: 70,
+        affinity: 30,
+        shareFun: { hook: '趣闻', text: '趣闻', id: 'f1' },
+        shareFishLife: { hook: '鱼生', text: '鱼生', id: 'fl1' },
+        shareMiniTheater: { hook: '剧场', text: '剧场', id: 'mt1' },
+        shareHot: { hook: '热搜', title: '热搜', id: 'h1' },
+        shareMedia: { hook: '番', title: '番', id: 'm1' },
+      },
+      {},
+      () => 0,
+    )
+    for (const id of ['fun_bit', 'fish_life', 'mini_theater', 'share_hot', 'share_media']) {
+      const m = weak.find((x) => x.id === id)
+      assert.ok(m, id)
+      assert.ok(m.score >= 0.48, `${id} score ${m.score}`)
+    }
+
+    const withFun = scoreMotives(
+      {
+        silentH: 6,
+        hour: 15,
+        mood: 55,
+        energy: 70,
+        affinity: 40,
+        shareFun: { hook: '趣闻', id: 'f1' },
+      },
+      {},
+      () => 0,
+    )
+    const miss = withFun.find((m) => m.id === 'miss')
+    assert.ok(miss)
+    assert.ok(miss.score >= 0.48, `miss ${miss.score}`)
   })
 })

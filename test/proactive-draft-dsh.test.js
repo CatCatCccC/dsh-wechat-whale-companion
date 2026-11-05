@@ -5,6 +5,7 @@ import {
   criticDraft,
   draftProactiveLine,
   draftWithDshLlm,
+  prefixChatter,
   resolveDshModel,
 } from '../lib/core/proactive-draft.js'
 
@@ -72,39 +73,152 @@ describe('proactive draft via DSH llm', () => {
       world: { mood: 55, affinity: 40, silentH: 8 },
       ctx,
       enabledLlm: true,
+      random: () => 0.99,
     })
     assert.equal(r.source, 'dsh-llm')
     assert.equal(r.line, '还在吗')
     assert.equal(r.critic, 'pass')
+
+    const noTic = await draftProactiveLine({
+      motiveId: 'miss',
+      world: { mood: 55, affinity: 40, silentH: 8, proactiveChatter: true },
+      ctx,
+      enabledLlm: true,
+      random: () => 0.01,
+    })
+    assert.equal(noTic.source, 'dsh-llm')
+    assert.equal(noTic.line, '还在吗')
   })
 
-  it('falls back to template when llm missing', async () => {
-    const r = await draftProactiveLine({
+  it('prefixChatter skips learn_owner', () => {
+    const ask = '你怕冷还是怕热呀'
+    assert.equal(
+      prefixChatter(ask, 'learn_owner', { proactiveChatter: true }, { random: () => 0.01 }),
+      ask,
+    )
+  })
+
+  it('miss uses soft fallback when llm missing; material skips', async () => {
+    const miss = await draftProactiveLine({
       motiveId: 'miss',
       world: {},
       ctx: { get: () => undefined },
       enabledLlm: true,
+      random: () => 0,
     })
+    assert.equal(miss.ok, true)
+    assert.equal(miss.source, 'soft_fallback')
+    assert.ok(miss.line)
+
+    const hot = await draftProactiveLine({
+      motiveId: 'share_hot',
+      world: { shareHot: { title: '热搜A' } },
+      ctx: { get: () => undefined },
+      enabledLlm: true,
+    })
+    assert.equal(hot.ok, false)
+    assert.equal(hot.line, '')
+    assert.equal(hot.source, 'none')
+  })
+
+  it('half_sentence uses short pool without llm', async () => {
+    let streamed = 0
+    async function* stream() {
+      streamed += 1
+      yield { type: 'text-delta', text: '不该走到这' }
+      yield { type: 'finish', kind: 'stop' }
+    }
+    const ctx = {
+      get(name) {
+        if (name === 'llm') return { stream: () => stream() }
+        if (name === 'agentDefaultModel') {
+          return {
+            currentSelection: () => ({
+              provider: 'deepseek-official',
+              model: 'flash',
+            }),
+          }
+        }
+        return undefined
+      },
+    }
+    const r = await draftProactiveLine({
+      motiveId: 'lazy',
+      form: 'half_sentence',
+      world: {},
+      ctx,
+      enabledLlm: true,
+      random: () => 0,
+    })
+    assert.equal(streamed, 0)
+    assert.equal(r.source, 'half_pool')
     assert.ok(r.line)
-    assert.ok(r.source === 'template' || r.source === 'emergency')
-    assert.equal(r.critic, 'no_dsh_llm')
+  })
+
+  it('alarm hardFallback always yields a line', async () => {
+    const r = await draftProactiveLine({
+      motiveId: 'promise_soft',
+      world: { upcomingPromise: { text: '七点闹钟叫醒' } },
+      ctx: { get: () => undefined },
+      enabledLlm: true,
+      hardFallback: true,
+    })
+    assert.equal(r.ok, true)
+    assert.equal(r.source, 'alarm_fallback')
+    assert.match(r.line, /到点了/)
   })
 
   it('critic still rejects preachy llm output', () => {
     assert.equal(criticDraft('记得喝水啦').ok, false)
   })
 
-  it('buildDraftPrompt includes share hooks', () => {
-    const { user } = buildDraftPrompt('weather', {
+  it('buildDraftPrompt feeds weather as material for AI', () => {
+    const { system, user } = buildDraftPrompt('weather', {
       shareWeather: { hook: '武汉降温' },
       mood: 50,
       affinity: 20,
       silentH: 2,
     })
-    assert.match(user, /分享钩子\(必用\): 武汉降温/)
+    assert.match(system, /素材请你自己组织/)
+    assert.match(user, /天气\(素材/)
+    assert.match(user, /武汉降温/)
+    assert.doesNotMatch(user, /分享钩子\(必用\)/)
   })
 
-  it('learn_owner skips LLM and uses bank ask', async () => {
+  it('recall motives feed owner words for AI to rewrite', () => {
+    const { system, user } = buildDraftPrompt('inside_joke', {
+      shareInsideJoke: { text: '要亲亲才能起床', hook: '亲亲' },
+      mood: 50,
+      affinity: 20,
+      silentH: 2,
+    })
+    assert.match(system, /素材请你自己组织/)
+    assert.match(system, /禁止「突然想起：」/)
+    assert.match(user, /主人说过\(素材/)
+    assert.match(user, /要亲亲才能起床/)
+    assert.doesNotMatch(user, /分享钩子\(必用\)/)
+  })
+
+  it('hot / fun / theater also feed material not template paste', () => {
+    const hot = buildDraftPrompt('share_hot', {
+      shareHot: { title: '某热搜' },
+      mood: 50,
+      affinity: 10,
+      silentH: 3,
+    })
+    assert.match(hot.user, /热搜\(素材/)
+    assert.match(hot.system, /看到热搜：/)
+    const fun = buildDraftPrompt('fun_bit', {
+      shareFun: { text: '鲸鱼心跳很慢' },
+      mood: 50,
+      affinity: 10,
+      silentH: 3,
+    })
+    assert.match(fun.user, /趣闻素材\(素材/)
+    assert.match(fun.user, /鲸鱼心跳很慢/)
+  })
+
+  it('learn_owner uses bank ask without llm', async () => {
     let streamed = 0
     async function* stream() {
       streamed += 1
@@ -131,11 +245,11 @@ describe('proactive draft via DSH llm', () => {
       world: { shareLearn: { ask, factKey: '主人.怕冷热', id: 'cold' } },
       ctx,
       enabledLlm: true,
-      random: () => 0,
+      random: () => 0.99,
     })
     assert.equal(streamed, 0)
+    assert.equal(r.ok, true)
     assert.equal(r.line, ask)
-    assert.equal(r.source, 'template')
-    assert.equal(r.critic, 'learn_template')
+    assert.equal(r.source, 'learn_bank')
   })
 })

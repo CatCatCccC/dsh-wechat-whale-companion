@@ -322,7 +322,7 @@ describe('dsh-wechat session observation', () => {
       'utf8',
     )
     const sent = []
-    const tools = {
+    const { ctx, listeners, services } = makeHost({
       get(name) {
         if (name !== 'send_wechat') return undefined
         return {
@@ -332,8 +332,15 @@ describe('dsh-wechat session observation', () => {
           },
         }
       },
+    })
+    async function* stream() {
+      yield { type: 'text-delta', text: '行 到点喊你' }
+      yield { type: 'finish', kind: 'stop' }
     }
-    const { ctx, listeners } = makeHost(tools)
+    services.set('llm', { stream: () => stream() })
+    services.set('agentDefaultModel', {
+      currentSelection: () => ({ provider: 'deepseek-official', model: 'flash' }),
+    })
     const handle = apply(ctx, {
       stateDir,
       wechatStorageDir: wechatDir,
@@ -351,7 +358,7 @@ describe('dsh-wechat session observation', () => {
       maybeAutoFromOwner(text) {
         autoCalls += 1
         assert.match(String(text), /闹钟|叫我|提醒/)
-        return { ok: true, item: { id: '1' }, label: '明天早上' }
+        return { ok: true, item: { id: '1', text: '明天早上7点' }, label: '明天早上' }
       },
     }
     const listener = listeners.get('session/event')?.[0]
@@ -366,9 +373,9 @@ describe('dsh-wechat session observation', () => {
       type: 'assistant/message',
       data: { message: { content: [{ type: 'text', text: '好' }] } },
     })
-    await new Promise((r) => setTimeout(r, 80))
+    await new Promise((r) => setTimeout(r, 120))
     assert.equal(autoCalls, 1)
-    assert.ok(sent.some((t) => /到点喊你/.test(t)))
+    assert.ok(sent.some((t) => /到点喊你|记下了/.test(t)))
     handle.dispose()
   })
 })

@@ -159,14 +159,14 @@ describe('relation layer soft', () => {
       moodWord: '还行',
       quietDay: true,
     })
-    assert.match(quiet, /今天忍住没烦你/)
+    assert.match(quiet, /今天忍住没烦主人/)
     const withShare = craftDailyEntry({
       day: '2099-01-01',
       turns: [],
       quietDay: true,
       shareHooks: ['问了怕冷'],
     })
-    assert.doesNotMatch(withShare, /忍住没烦你/)
+    assert.doesNotMatch(withShare, /忍住没烦/)
   })
 
   it('buildShareCandidates exposes insideJoke and fishLife', () => {

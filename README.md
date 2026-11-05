@@ -144,8 +144,8 @@ dsh plugin --profile web add github:CatCatCccC/dsh-wechat-whale-companion
         proactiveCooldownMin: 22
         proactiveMinOwnerGapMin: 12    # 主人刚聊过不主动
         proactiveStickerChance: 0.32
-        proactiveLlmDraft: true        # 用 DSH ctx.llm（同聊天模型）；失败回落模板
-        proactiveDailyMax: 3           # 日主动上限（约定软垫可突破）
+        proactiveLlmDraft: true        # 用 DSH ctx.llm；素材类失败跳过，想你了可短兜底，闹钟必达
+        proactiveDailyMax: 0           # 0=不限条数/天（仍受冷却与概率约束）
       memory:
         enabled: true
         halfLifeDays: 30        # 事件记忆淡一半的天数；fact 不淡
@@ -173,7 +173,7 @@ dsh plugin --profile web add github:CatCatCccC/dsh-wechat-whale-companion
       notes:
         enabled: true           # 自动导出可读 Markdown 到状态目录 notes/
       shareExternal:
-        hot: false              # 热搜（默认关）
+        hot: true               # 微博热搜（不通则本轮不聊热点；日 1 条独立名额）
         media: false            # ACG/音乐（默认关）
       http:
         port: 3199
